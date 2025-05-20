@@ -57,7 +57,7 @@ export default function QuestionPaperList() {
   const uniqueCodes = [...new Set(papers.map((p) => p.paperCode))];
 
   return (
-    <div className="min-h-screen bg-white px-6 py-10 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-white px-6 py-10 max-w-7xl mx-auto pt-20">
       <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
         Previous Year Question Papers
       </h1>
