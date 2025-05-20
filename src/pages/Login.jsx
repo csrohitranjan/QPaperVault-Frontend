@@ -25,13 +25,13 @@ export default function Login() {
 
         switch (user.role) {
           case "student":
-            navigate("/student/dashboard");
+            navigate("/student-dashboard");
             break;
           case "educator":
-            navigate("/educator/dashboard");
+            navigate("/educator-dashboard");
             break;
           case "admin":
-            navigate("/admin/dashboard");
+            navigate("/admin-dashboard");
             break;
           default:
             navigate("/");

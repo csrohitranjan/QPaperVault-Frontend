@@ -18,7 +18,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-50 to-white p-6">
+    <div className="min-h-screen bg-gradient-to-r from-gray-50 to-white p-6 pt-24">
       {/* Profile Header */}
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-center gap-6 relative">
         {/* Profile Image */}
