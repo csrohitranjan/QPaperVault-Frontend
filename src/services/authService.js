@@ -16,3 +16,12 @@ export const registerUser = (data) => API.post("/api/v1/users/registerUser", dat
 // Question Paper APIs
 export const getApprovedQuestionPapers = () =>
   API.get("/api/v1/users/getApprovedQuestionPapers");
+
+export const uploadQuestionPaper = (formData, token) => {
+  return API.post("/api/v1/educator/uploadQuestionPaper", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

@@ -22,5 +22,10 @@ export const clearAuthData = () => {
   localStorage.removeItem(USER_KEY);
 };
 
+// Logout function (alias for clearAuthData)
+export const logoutUser = () => {
+  clearAuthData();
+};
+
 // Check if logged in
 export const isLoggedIn = () => !!getToken();
