@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { getUser, logoutUser } from "../utils/auth";
 import Modal from "../components/Modal";
 import UploadPaperForm from "../components/UploadPaperForm";
-import { FileText, LogOut, Menu, Plus, User, Inbox } from "lucide-react";
+import { FileText, LogOut, Menu, Plus, User, Inbox, Home } from "lucide-react"; // ADDED: imported Home icon
 import UploadRequestsTable from "../components/UploadRequestsTable";
 import MyUploadsTable from "../components/MyUploadsTable"; // Add at the top
 
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   const user = getUser();
   const [modalOpen, setModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("uploads");
+  const [activeSection, setActiveSection] = useState("dashboard"); // UPDATED: default changed to "dashboard"
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -91,6 +91,14 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex flex-col mt-8 space-y-2 px-2">
+          {/* ADDED: Dashboard sidebar item */}
+          <SidebarItem
+            icon={<Home size={20} />}
+            label="Dashboard"
+            active={activeSection === "dashboard"} // UPDATED
+            onClick={() => setActiveSection("dashboard")} // UPDATED
+            open={sidebarOpen}
+          />
           <SidebarItem
             icon={<Inbox size={20} />}
             label="Upload Requests"
@@ -122,7 +130,11 @@ export default function AdminDashboard() {
         <header className="flex items-center justify-between bg-gradient-to-r from-indigo-800 via-purple-700 to-pink-700 px-6 py-3 shadow-md select-none">
           {/* Left: Section title */}
           <h2 className="text-white text-lg font-semibold tracking-wide">
-            {activeSection === "uploads" ? "My Uploads" : "Upload Requests"}
+            {activeSection === "dashboard"
+              ? "Dashboard" // UPDATED
+              : activeSection === "uploads"
+              ? "My Uploads"
+              : "Upload Requests"}
           </h2>
 
           {/* Right: User dropdown */}
@@ -200,6 +212,19 @@ export default function AdminDashboard() {
 
         {/* Content Area */}
         <main className="flex-1 overflow-auto p-8 bg-gray-50">
+          {activeSection === "dashboard" && (
+            // ADDED: Dashboard content section
+            <section className="w-full py-6">
+              <h1 className="text-2xl font-bold mb-4 text-gray-800">
+                Welcome to the Dashboard
+              </h1>
+              <p className="text-gray-600">
+                Use the sidebar to navigate between Upload Requests and your
+                Uploads.
+              </p>
+            </section>
+          )}
+
           {activeSection === "requests" && (
             <section className="w-full py-6">
               <div className="max-w-full overflow-x-auto">
@@ -264,7 +289,10 @@ export default function AdminDashboard() {
             }
           }
           .animate-fadeScale {
-            animation: fadeScale 150ms ease forwards;
+            animation: fadeScale 0.2s ease-in-out forwards;
+          }
+          .transition-width {
+            transition-property: width;
           }
         `}
       </style>
@@ -272,36 +300,22 @@ export default function AdminDashboard() {
   );
 }
 
-// Sidebar navigation item component
-function SidebarItem({ icon, label, onClick, open, active }) {
+function SidebarItem({ icon, label, active, onClick, open }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-4 py-3 px-5 rounded-lg font-semibold transition-colors duration-300 ${
-        active
-          ? "bg-indigo-600 text-white shadow-lg"
-          : "text-indigo-200 hover:bg-indigo-600 hover:text-white"
-      }`}
+      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors
+        w-full text-left
+        ${
+          active
+            ? "bg-indigo-600 shadow-md text-white font-semibold"
+            : "hover:bg-indigo-600 hover:text-white text-indigo-300"
+        }
+      `}
+      aria-current={active ? "page" : undefined}
     >
-      <span>{icon}</span>
-      {open && <span className="select-none">{label}</span>}
+      {icon}
+      {open && <span className="truncate">{label}</span>}
     </button>
-  );
-}
-
-// Simple Upload Card component
-function UploadCard({ course, year, semester }) {
-  return (
-    <div className="p-4 hover:shadow-lg rounded-lg cursor-pointer transition border border-gray-200 bg-indigo-50">
-      <p>
-        <strong>Course:</strong> {course}
-      </p>
-      <p>
-        <strong>Year:</strong> {year}
-      </p>
-      <p>
-        <strong>Semester:</strong> {semester}
-      </p>
-    </div>
   );
 }

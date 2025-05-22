@@ -26,11 +26,31 @@ export const uploadQuestionPaper = (formData, token) => {
   });
 };
 
-
-
 export const getPendingQuestionPapers = (token) =>
   API.get("/api/v1/questionPaper/getPendingQuestionPapers", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+
+export const approveQuestionPaper = (questionPaperId, remark, token) =>
+  API.put(
+    `/api/v1/questionPaper/approveQuestionPaper/${questionPaperId}`,
+    { remark },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+export const rejectQuestionPaper = (questionPaperId, remark, token) =>
+  API.put(
+    `/api/v1/questionPaper/rejectQuestionPaper/${questionPaperId}`,
+    { remark },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
