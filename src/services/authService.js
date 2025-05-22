@@ -25,3 +25,12 @@ export const uploadQuestionPaper = (formData, token) => {
     },
   });
 };
+
+
+
+export const getPendingQuestionPapers = (token) =>
+  API.get("/api/v1/questionPaper/getPendingQuestionPapers", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
