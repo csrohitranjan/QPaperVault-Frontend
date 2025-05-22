@@ -6,6 +6,7 @@ import UploadPaperForm from "../components/UploadPaperForm";
 import { FileText, LogOut, Menu, Plus, User, Inbox, Home } from "lucide-react"; // ADDED: imported Home icon
 import UploadRequestsTable from "../components/UploadRequestsTable";
 import MyUploadsTable from "../components/MyUploadsTable"; // Add at the top
+import UserProfile from "../components/UserProfile";
 
 // Simple Error Boundary to catch errors inside UploadRequestsTable
 class ErrorBoundary extends React.Component {
@@ -131,10 +132,14 @@ export default function AdminDashboard() {
           {/* Left: Section title */}
           <h2 className="text-white text-lg font-semibold tracking-wide">
             {activeSection === "dashboard"
-              ? "Dashboard" // UPDATED
+              ? "Dashboard"
               : activeSection === "uploads"
               ? "My Uploads"
-              : "Upload Requests"}
+              : activeSection === "requests"
+              ? "Upload Requests"
+              : activeSection === "profile"
+              ? "Profile"
+              : ""}
           </h2>
 
           {/* Right: User dropdown */}
@@ -191,12 +196,16 @@ export default function AdminDashboard() {
               >
                 <button
                   className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-t-xl"
-                  onClick={() => alert("Profile clicked!")}
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    setActiveSection("profile");
+                  }}
                   role="menuitem"
                   tabIndex={0}
                 >
                   <User size={18} className="mr-3 text-purple-600" /> Profile
                 </button>
+
                 <button
                   className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-b-xl"
                   onClick={handleLogout}
@@ -268,6 +277,7 @@ export default function AdminDashboard() {
               </button>
             </section>
           )}
+          {activeSection === "profile" && <UserProfile user={user} />}
         </main>
       </div>
 
