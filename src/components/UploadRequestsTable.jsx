@@ -100,7 +100,7 @@ export default function UploadRequestsTable() {
                 <td className="px-6 py-2">{req.year}</td>
                 <td className="px-6 py-2">{req.month}</td>
                 <td className="px-6 py-2">
-                  {req.uploadedBy?.fullName || "N/A"}
+                  {req.uploadedBy?.enrollmentNumber || "N/A"}
                 </td>
                 <td className="px-6 py-3 text-center flex justify-center items-center space-x-3">
                   <a

@@ -54,3 +54,11 @@ export const rejectQuestionPaper = (questionPaperId, remark, token) =>
       },
     }
   );
+
+
+export const getUserUploadedQuestionPapers = (token) =>
+  API.get("/api/v1/questionPaper/getUserUploadedQuestionPapers", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
