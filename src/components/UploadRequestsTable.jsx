@@ -5,6 +5,7 @@ import {
   rejectQuestionPaper,
 } from "../services/authService";
 import Modal from "./Modal";
+import { toast } from "react-toastify";
 
 export default function UploadRequestsTable() {
   const [requests, setRequests] = useState([]);
@@ -22,9 +23,11 @@ export default function UploadRequestsTable() {
         const token = localStorage.getItem("accessToken");
         const response = await getPendingQuestionPapers(token);
         setRequests(response.data.pendingPapers || []);
+        setError(null);
       } catch (err) {
         console.error(err);
         setError("Failed to load upload requests.");
+        toast.error("Failed to load upload requests.");
       } finally {
         setLoading(false);
       }
@@ -43,16 +46,24 @@ export default function UploadRequestsTable() {
   const handleSubmit = async () => {
     const token = localStorage.getItem("accessToken");
     try {
+      let response;
       if (actionType === "approve") {
-        await approveQuestionPaper(selectedId, remark, token);
+        response = await approveQuestionPaper(selectedId, remark, token);
       } else {
-        await rejectQuestionPaper(selectedId, remark, token);
+        response = await rejectQuestionPaper(selectedId, remark, token);
       }
+      toast.success(
+        response?.data?.message || `Question paper ${actionType}d successfully.`
+      );
       setRequests((prev) => prev.filter((req) => req._id !== selectedId));
       setIsModalOpen(false);
     } catch (error) {
       console.error(`${actionType} failed`, error);
-      alert(`Failed to ${actionType} the question paper.`);
+      const errMsg =
+        error?.response?.data?.message ||
+        error?.message ||
+        `Failed to ${actionType} the question paper.`;
+      toast.error(errMsg);
     }
   };
 
