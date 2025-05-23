@@ -1,42 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, X } from "lucide-react";
+import { updateUserProfile, changeUserPassword } from "../services/authService";
+import { toast } from "react-toastify";
 
 export default function UserProfile({ user }) {
   const initialProfile = {
-    fullName: user?.fullName || "John Doe",
-    email: user?.email || "john.doe@example.com",
-    mobile: user?.mobile || "+1 (123) 456-7890",
-    department: user?.department || "Computer Science",
-    programme: user?.programme || "B.Tech",
-    enrollmentNumber: user?.enrollmentNumber || "CS1234567",
+    fullName: user?.fullName,
+    email: user?.email,
+    phoneNumber: user?.phoneNumber,
+    department: user?.department,
+    programme: user?.programme,
+    enrollmentNumber: user?.enrollmentNumber,
   };
 
   const [profile, setProfile] = useState(initialProfile);
   const [isEditing, setIsEditing] = useState(false);
-  const editableFields = ["email", "mobile"];
   const [hasProfileChanges, setHasProfileChanges] = useState(false);
 
-  // Password section state
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // Handle profile input changes
-  const handleInputChange = (field, value) => {
-    setProfile((prev) => ({ ...prev, [field]: value }));
-  };
+  const editableFields = ["phoneNumber"];
+  if (!initialProfile.department) editableFields.push("department");
+  if (!initialProfile.programme) editableFields.push("programme");
 
-  // Check if profile fields changed
   useEffect(() => {
     const changed = editableFields.some(
       (field) => profile[field] !== initialProfile[field]
     );
     setHasProfileChanges(changed);
-  }, [profile, initialProfile]);
+  }, [profile]);
 
-  // Validate password fields whenever they change
   useEffect(() => {
     if (!showPasswordFields) {
       setPasswordError("");
@@ -44,41 +41,68 @@ export default function UserProfile({ user }) {
     }
     if (!currentPassword || !newPassword || !confirmPassword) {
       setPasswordError("All password fields are required");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
+    } else if (newPassword !== confirmPassword) {
       setPasswordError("New passwords do not match");
-      return;
-    }
-    if (newPassword.length < 8) {
+    } else if (newPassword.length < 8) {
       setPasswordError("New password must be at least 8 characters");
-      return;
+    } else {
+      setPasswordError("");
     }
-    setPasswordError("");
   }, [showPasswordFields, currentPassword, newPassword, confirmPassword]);
 
   const canSubmit =
     (hasProfileChanges && isEditing) ||
     (showPasswordFields && passwordError === "");
 
-  const handleSave = (e) => {
+  const handleInputChange = (field, value) => {
+    setProfile((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
 
-    // Your API calls here...
+    try {
+      const token = localStorage.getItem("accessToken");
 
-    console.log("Profile updated:", profile);
-    if (showPasswordFields) {
-      console.log("Password changed:", { currentPassword, newPassword });
-      // Reset password fields after update
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setShowPasswordFields(false);
+      const updatePayload = {};
+      editableFields.forEach((field) => {
+        if (profile[field] !== initialProfile[field]) {
+          updatePayload[field] = profile[field];
+        }
+      });
+
+      if (Object.keys(updatePayload).length > 0) {
+        const resProfile = await updateUserProfile(updatePayload, token);
+        toast.success(resProfile?.data?.message);
+
+        // Update initialProfile to keep latest profile after successful update
+        Object.assign(initialProfile, updatePayload);
+      }
+
+      if (showPasswordFields) {
+        const resPassword = await changeUserPassword(
+          {
+            oldPassword: currentPassword,
+            newPassword,
+            confirmPassword,
+          },
+          token
+        );
+        toast.success(resPassword?.data?.message);
+
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setShowPasswordFields(false);
+      }
+
+      setIsEditing(false);
+      setHasProfileChanges(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Update failed");
+      console.error("Update error:", error);
     }
-
-    setIsEditing(false);
-    setHasProfileChanges(false);
   };
 
   const formatLabel = (label) =>
@@ -90,14 +114,16 @@ export default function UserProfile({ user }) {
         <button
           type="button"
           onClick={() => {
-            setIsEditing((prev) => !prev);
             if (isEditing) {
+              setProfile(initialProfile);
               setShowPasswordFields(false);
               setCurrentPassword("");
               setNewPassword("");
               setConfirmPassword("");
               setPasswordError("");
+              setHasProfileChanges(false);
             }
+            setIsEditing((prev) => !prev);
           }}
           className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:underline"
         >
@@ -130,14 +156,16 @@ export default function UserProfile({ user }) {
               <input
                 id={key}
                 type={key === "email" ? "email" : "text"}
-                value={value}
+                value={value || ""}
                 onChange={(e) => handleInputChange(key, e.target.value)}
                 className="w-full bg-transparent border-b border-gray-300 focus:border-indigo-500 focus:outline-none text-base py-1"
                 autoComplete="off"
                 required
               />
             ) : (
-              <p className="text-base font-medium text-gray-900">{value}</p>
+              <p className="text-base font-medium text-gray-900">
+                {value || "—"}
+              </p>
             )}
           </div>
         ))}
@@ -158,14 +186,13 @@ export default function UserProfile({ user }) {
 
             {showPasswordFields && (
               <>
-                {/* Password inputs container with 3 columns for compact layout */}
                 <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-6">
                   <div>
                     <label
                       htmlFor="currentPassword"
                       className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-1"
                     >
-                      Current Password
+                      Old Password
                     </label>
                     <input
                       id="currentPassword"
@@ -173,11 +200,9 @@ export default function UserProfile({ user }) {
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       className="w-full border-b border-gray-300 focus:border-indigo-500 focus:outline-none text-base py-1"
-                      autoComplete="current-password"
                       required
                     />
                   </div>
-
                   <div>
                     <label
                       htmlFor="newPassword"
@@ -191,17 +216,15 @@ export default function UserProfile({ user }) {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       className="w-full border-b border-gray-300 focus:border-indigo-500 focus:outline-none text-base py-1"
-                      autoComplete="new-password"
                       required
                     />
                   </div>
-
                   <div>
                     <label
                       htmlFor="confirmPassword"
                       className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-1"
                     >
-                      Confirm New Password
+                      Confirm Password
                     </label>
                     <input
                       id="confirmPassword"
@@ -209,12 +232,10 @@ export default function UserProfile({ user }) {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full border-b border-gray-300 focus:border-indigo-500 focus:outline-none text-base py-1"
-                      autoComplete="new-password"
                       required
                     />
                   </div>
                 </div>
-
                 {passwordError && (
                   <div className="sm:col-span-2 text-red-600 text-xs mt-1">
                     {passwordError}

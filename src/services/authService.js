@@ -62,3 +62,19 @@ export const getUserUploadedQuestionPapers = (token) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+
+// User Profile APIs
+export const updateUserProfile = (data, token) =>
+  API.put("/api/v1/users/updateUserProfile", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+
+// Change user password
+export const changeUserPassword = (data, token) =>
+  API.put("/api/v1/users/changePassword", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
