@@ -5,7 +5,6 @@ import QuestionPaperList from "../components/QuestionPaperList";
 export default function Home() {
   return (
     <>
-      {/* <Navbar /> */}
       <QuestionPaperList />
     </>
   );

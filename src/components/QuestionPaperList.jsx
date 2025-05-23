@@ -128,7 +128,7 @@ export default function QuestionPaperList() {
                   <strong>Exam:</strong> {paper.month} {paper.year}
                 </p>
                 <p className="text-sm text-gray-500 mt-2 italic">
-                  Uploaded by: {paper?.uploadedBy?.fullName|| "User deleted"}
+                  Uploaded by: {paper?.uploadedBy?.fullName || "User deleted"}
                 </p>
               </div>
 
