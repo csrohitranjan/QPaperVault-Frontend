@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { uploadQuestionPaper } from "../services/authService";
+import { toast } from "react-toastify";
 
 export default function UploadPaperForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -12,8 +13,6 @@ export default function UploadPaperForm({ onClose }) {
   });
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -27,15 +26,13 @@ export default function UploadPaperForm({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
 
     if (!file) {
-      setError("Please upload a PDF file.");
+      toast.error("Please upload a PDF file.");
       return;
     }
     if (file.type !== "application/pdf") {
-      setError("Only PDF files are allowed.");
+      toast.error("Only PDF files are allowed.");
       return;
     }
 
@@ -55,7 +52,7 @@ export default function UploadPaperForm({ onClose }) {
       const response = await uploadQuestionPaper(data, token);
 
       if (response.status === 200) {
-        setSuccess(response.data.message || "Upload successful!");
+        toast.success(response.data.message);
         setFormData({
           paperName: "",
           paperCode: "",
@@ -67,14 +64,13 @@ export default function UploadPaperForm({ onClose }) {
         setFile(null);
 
         setTimeout(() => {
-          setSuccess(null);
           onClose();
         }, 1500);
       }
     } catch (err) {
       const message =
         err.response?.data?.message || "Upload failed. Try again.";
-      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -88,11 +84,6 @@ export default function UploadPaperForm({ onClose }) {
       <h2 className="text-center text-lg font-medium text-gray-700">
         Upload Question Paper
       </h2>
-
-      {error && <p className="text-red-600 text-center text-xs">{error}</p>}
-      {success && (
-        <p className="text-green-600 text-center text-xs">{success}</p>
-      )}
 
       <div className="space-y-2">
         <input
