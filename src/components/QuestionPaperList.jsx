@@ -1,3 +1,4 @@
+// src/components/QuestionPaperList.jsx
 import React, { useEffect, useState } from "react";
 import { getApprovedQuestionPapers } from "../services/authService";
 import { FiSearch, FiDownload, FiEye, FiX } from "react-icons/fi";

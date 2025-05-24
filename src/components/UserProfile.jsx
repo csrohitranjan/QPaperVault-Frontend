@@ -1,3 +1,5 @@
+// src/components/UserProfile.jsx
+
 import React, { useState, useEffect } from "react";
 import { Pencil, X } from "lucide-react";
 import { updateUserProfile, changeUserPassword } from "../services/authService";

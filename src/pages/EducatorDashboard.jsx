@@ -1,3 +1,4 @@
+// src/pages/EducatorDashboard.jsx
 import React, { useState } from "react";
 import { getUser, logoutUser } from "../utils/auth";
 import Modal from "../components/Modal";
