@@ -1,7 +1,8 @@
+// Login.jsx
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setAuthData } from "../utils/auth";
+import { loginUser } from "../services/authService";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,10 +13,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8200/api/v1/users/loginUser", {
-        email,
-        password,
-      });
+      const res = await loginUser({ email, password });
 
       if (res.data.success) {
         const { accessToken, user } = res.data;
@@ -49,7 +47,9 @@ export default function Login() {
         onSubmit={handleLogin}
         className="bg-white shadow-md rounded-lg p-8 w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
+          Login
+        </h2>
 
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
@@ -62,7 +62,7 @@ export default function Login() {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-2">
           <label className="block text-gray-700">Password</label>
           <input
             type="password"
@@ -71,6 +71,16 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
+
+        {/* Forgot Password link */}
+        <div className="mb-6 text-right">
+          <a
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Forgot Password?
+          </a>
         </div>
 
         <button
