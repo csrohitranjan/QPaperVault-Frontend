@@ -10,6 +10,8 @@ import EducatorDashboard from "./pages/EducatorDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ErrorPage from "./pages/ErrorPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,7 +19,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Routes that include the Navbar */}
+        {/* Routes with Navbar */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -26,10 +28,33 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
-        {/* Routes without the Navbar */}
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
-        <Route path="/educator-dashboard" element={<EducatorDashboard />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        {/* Protected Routes */}
+        <Route
+          path="/student-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["student"]}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/educator-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["educator"]}>
+              <EducatorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        {/* Catch-all route for 404 */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
 
       <ToastContainer
