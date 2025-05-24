@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Axios instance
 const API = axios.create({
-  baseURL: "http://localhost:8200",
+  baseURL: "https://qpapervault-backend-2te2.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
