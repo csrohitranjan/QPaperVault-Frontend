@@ -1,5 +1,4 @@
 // src/components/UploadRequestTable.jsx
-
 import React, { useEffect, useState } from "react";
 import {
   getPendingQuestionPapers,
@@ -113,7 +112,7 @@ export default function UploadRequestsTable() {
                 <td className="px-6 py-2">{req.year}</td>
                 <td className="px-6 py-2">{req.month}</td>
                 <td className="px-6 py-2">
-                  {req.uploadedBy?.enrollmentNumber || "N/A"}
+                  {req.uploadedBy?.enrollmentNumber}
                 </td>
                 <td className="px-6 py-3 text-center flex justify-center items-center space-x-3">
                   <a
