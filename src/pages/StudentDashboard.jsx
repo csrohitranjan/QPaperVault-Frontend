@@ -78,7 +78,7 @@ export default function StudentDashboard() {
         </nav>
 
         <div className="mt-auto px-6 py-4 border-t border-indigo-700 text-sm opacity-70">
-          {sidebarOpen && <p>&copy; 2025 Your Company</p>}
+          {sidebarOpen && <p>&copy; 2025 QPaperVault</p>}
         </div>
       </aside>
 

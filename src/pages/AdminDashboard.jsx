@@ -3,46 +3,16 @@ import React, { useState, useRef, useEffect } from "react";
 import { getUser, logoutUser } from "../utils/auth";
 import Modal from "../components/Modal";
 import UploadPaperForm from "../components/UploadPaperForm";
-import { FileText, LogOut, Menu, Plus, User, Inbox, Home } from "lucide-react"; // ADDED: imported Home icon
+import { FileText, LogOut, Menu, User, Inbox, Home } from "lucide-react";
 import UploadRequestsTable from "../components/UploadRequestsTable";
-import MyUploadsTable from "../components/MyUploadsTable"; // Add at the top
+import MyUploadsTable from "../components/MyUploadsTable";
 import UserProfile from "../components/UserProfile";
-
-// Simple Error Boundary to catch errors inside UploadRequestsTable
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("ErrorBoundary caught error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="p-6 bg-red-100 rounded-md text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Something went wrong.</h2>
-          <pre className="whitespace-pre-wrap">
-            {this.state.error?.toString()}
-          </pre>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 export default function AdminDashboard() {
   const user = getUser();
   const [modalOpen, setModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("dashboard"); // UPDATED: default changed to "dashboard"
+  const [activeSection, setActiveSection] = useState("dashboard");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -92,12 +62,11 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="flex flex-col mt-8 space-y-2 px-2">
-          {/* ADDED: Dashboard sidebar item */}
           <SidebarItem
             icon={<Home size={20} />}
             label="Dashboard"
-            active={activeSection === "dashboard"} // UPDATED
-            onClick={() => setActiveSection("dashboard")} // UPDATED
+            active={activeSection === "dashboard"}
+            onClick={() => setActiveSection("dashboard")}
             open={sidebarOpen}
           />
           <SidebarItem
@@ -119,7 +88,7 @@ export default function AdminDashboard() {
         <div className="mt-auto px-6 py-6 border-t border-indigo-600">
           {sidebarOpen && (
             <p className="text-xs opacity-70 select-none">
-              &copy; 2025 Your Company
+              &copy; 2025 QPaperVault
             </p>
           )}
         </div>
@@ -129,7 +98,6 @@ export default function AdminDashboard() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Topbar */}
         <header className="flex items-center justify-between bg-gradient-to-r from-indigo-800 via-purple-700 to-pink-700 px-6 py-3 shadow-md select-none">
-          {/* Left: Section title */}
           <h2 className="text-white text-lg font-semibold tracking-wide">
             {activeSection === "dashboard"
               ? "Dashboard"
@@ -142,7 +110,7 @@ export default function AdminDashboard() {
               : ""}
           </h2>
 
-          {/* Right: User dropdown */}
+          {/* User Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -176,7 +144,6 @@ export default function AdminDashboard() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -188,29 +155,19 @@ export default function AdminDashboard() {
             </button>
 
             {dropdownOpen && (
-              <div
-                className="absolute right-0 mt-2 w-52 rounded-xl bg-white border border-purple-300 shadow-md origin-top-right z-50"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="user-menu"
-              >
+              <div className="absolute right-0 mt-2 w-52 rounded-xl bg-white border border-purple-300 shadow-md origin-top-right z-50">
                 <button
                   className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-t-xl"
                   onClick={() => {
                     setDropdownOpen(false);
                     setActiveSection("profile");
                   }}
-                  role="menuitem"
-                  tabIndex={0}
                 >
                   <User size={18} className="mr-3 text-purple-600" /> Profile
                 </button>
-
                 <button
                   className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-b-xl"
                   onClick={handleLogout}
-                  role="menuitem"
-                  tabIndex={0}
                 >
                   <LogOut size={18} className="mr-3 text-purple-600" /> Logout
                 </button>
@@ -222,7 +179,6 @@ export default function AdminDashboard() {
         {/* Content Area */}
         <main className="flex-1 overflow-auto p-8 bg-gray-50">
           {activeSection === "dashboard" && (
-            // ADDED: Dashboard content section
             <section className="w-full py-6">
               <h1 className="text-2xl font-bold mb-4 text-gray-800">
                 Welcome to the Dashboard
@@ -233,7 +189,6 @@ export default function AdminDashboard() {
               </p>
             </section>
           )}
-
           {activeSection === "requests" && (
             <section className="w-full py-6">
               <div className="max-w-full overflow-x-auto">
@@ -241,21 +196,14 @@ export default function AdminDashboard() {
               </div>
             </section>
           )}
-
           {activeSection === "uploads" && (
             <section className="w-full py-6 relative">
               <div className="max-w-full overflow-x-auto">
                 <MyUploadsTable />
               </div>
-
-              {/* Professional Upload Button fixed bottom-right */}
               <button
                 onClick={() => setModalOpen(true)}
-                className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-700
-                 hover:from-blue-700 hover:to-indigo-800
-                 text-white font-semibold px-5 py-3 rounded-full shadow-lg
-                 flex items-center space-x-2 text-base transition-transform transform hover:scale-105
-                 focus:outline-none focus:ring-4 focus:ring-blue-400"
+                className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold px-5 py-3 rounded-full shadow-lg flex items-center space-x-2 text-base transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400"
                 aria-label="Upload Previous Year Question Paper"
                 title="Upload Previous Year Question Paper"
               >
@@ -285,22 +233,8 @@ export default function AdminDashboard() {
         <UploadPaperForm onClose={() => setModalOpen(false)} />
       </Modal>
 
-      {/* Animation style */}
       <style>
         {`
-          @keyframes fadeScale {
-            0% {
-              opacity: 0;
-              transform: scale(0.95);
-            }
-            100% {
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-          .animate-fadeScale {
-            animation: fadeScale 0.2s ease-in-out forwards;
-          }
           .transition-width {
             transition-property: width;
           }
@@ -314,14 +248,11 @@ function SidebarItem({ icon, label, active, onClick, open }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors
-        w-full text-left
-        ${
-          active
-            ? "bg-indigo-600 shadow-md text-white font-semibold"
-            : "hover:bg-indigo-600 hover:text-white text-indigo-300"
-        }
-      `}
+      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors w-full text-left ${
+        active
+          ? "bg-indigo-600 shadow-md text-white font-semibold"
+          : "hover:bg-indigo-600 hover:text-white text-indigo-300"
+      }`}
       aria-current={active ? "page" : undefined}
     >
       {icon}
