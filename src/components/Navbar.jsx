@@ -15,7 +15,8 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-opacity-90 backdrop-blur-md shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"> */}
+      <div className="w-full px-2 sm:px-4 lg:px-8 h-14 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/"
