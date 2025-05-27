@@ -11,6 +11,7 @@ export default function QuestionPaperList() {
   const [programFilter, setProgramFilter] = useState("All");
   const [codeFilter, setCodeFilter] = useState("All");
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getDownloadUrl = (url) => {
     const parts = url.split("/upload/");
@@ -22,6 +23,7 @@ export default function QuestionPaperList() {
   useEffect(() => {
     async function fetchPapers() {
       try {
+        setLoading(true); // Start loading
         const res = await getApprovedQuestionPapers();
         if (res.status === 200) {
           setPapers(res.data.approvedPapers);
@@ -29,6 +31,8 @@ export default function QuestionPaperList() {
         }
       } catch (error) {
         console.error("Error fetching papers:", error);
+      } finally {
+        setLoading(false); // End loading regardless of success/fail
       }
     }
     fetchPapers();
@@ -105,7 +109,11 @@ export default function QuestionPaperList() {
 
       {/* Papers Grid */}
       <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {filteredPapers.length === 0 ? (
+        {loading ? (
+          <p className="col-span-full text-center text-gray-600 text-lg font-medium">
+            Fetching Question Papers...
+          </p>
+        ) : filteredPapers.length === 0 ? (
           <p className="col-span-full text-center text-gray-600 text-lg font-medium">
             No papers found.
           </p>
