@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ConfirmRegistration from "./pages/ConfirmRegistration";
 import ErrorPage from "./pages/ErrorPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -53,6 +54,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/confirm-registration" element={<ConfirmRegistration />} />
         {/* Catch-all route for 404 */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>

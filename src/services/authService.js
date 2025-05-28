@@ -15,6 +15,9 @@ const API = axios.create({
 export const requestRegistration = (data) =>
   API.post("/api/v1/users/requestRegistration", data);
 
+export const confirmRegistration = (token) =>
+  API.get(`/api/v1/users/confirmRegistration?token=${token}`);
+
 
 export const loginUser = (data) =>
   API.post("/api/v1/users/loginUser", data);
