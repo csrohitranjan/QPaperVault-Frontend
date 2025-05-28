@@ -1,9 +1,7 @@
 // src/pages/Signup.jsx
 import React, { useState } from "react";
 import InputField from "../components/InputField";
-import { registerUser } from "../services/authService";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { requestRegistration } from "../services/authService";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -14,8 +12,7 @@ export default function Signup() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,17 +30,14 @@ export default function Signup() {
       return;
     }
     if (formData.password.length < 8) {
-      toast.error("Password must be at least 8 characters.");
-      // setError("Password must be at least 8 characters.");
+      setError("Password must be at least 8 characters.");
       return;
     }
     setIsLoading(true); // start loading
     try {
-      const res = await registerUser(formData);
-      console.log("Signup Success", res.data);
+      await requestRegistration(formData);
+      setIsSuccess(true); // Show success screen
       setError("");
-      // Redirect to login
-      navigate("/login");
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Signup failed");
@@ -51,6 +45,49 @@ export default function Signup() {
       setIsLoading(false); // stop loading
     }
   };
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-md border border-gray-200 p-8 text-center">
+          <div className="mx-auto mb-6 w-16 h-16 flex items-center justify-center rounded-full bg-green-100">
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              role="img"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-extrabold text-green-600 mb-2">
+            Registration Successful
+          </h2>
+          <p className="text-gray-700 text-base mb-4">
+            Thank you for registering. Please activate your account using the
+            link sent to:
+          </p>
+          <p
+            className="text-gray-900 font-semibold mb-6 break-words select-text"
+            aria-live="polite"
+          >
+            {formData.email}
+          </p>
+          <p className="text-gray-500 text-sm">
+            If you don’t see the email soon, check your spam folder. Once
+            activated, you can log in and access all features.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">

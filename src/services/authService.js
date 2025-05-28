@@ -11,12 +11,13 @@ const API = axios.create({
 
 
 // Users APIs
+
+export const requestRegistration = (data) =>
+  API.post("/api/v1/users/requestRegistration", data);
+
+
 export const loginUser = (data) =>
   API.post("/api/v1/users/loginUser", data);
-
-export const registerUser = (data) =>
-  API.post("/api/v1/users/registerUser", data);
-
 
 export const updateUserProfile = (data, token) =>
   API.put("/api/v1/users/updateUserProfile", data, {
