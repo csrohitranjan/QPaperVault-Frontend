@@ -15,7 +15,9 @@ import ConfirmRegistration from "./pages/ConfirmRegistration";
 import ErrorPage from "./pages/ErrorPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Contact from "./pages/Contact";
+import Notes from "./pages/Notes";
+import QuestionPaperList from "./components/QuestionPaperList";
 function App() {
   return (
     <Router>
@@ -27,6 +29,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pyqs" element={<QuestionPaperList />} />
+          <Route path="/notes" element={<Notes />} />
         </Route>
 
         {/* Protected Routes */}

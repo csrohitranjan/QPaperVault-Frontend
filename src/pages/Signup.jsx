@@ -1,4 +1,3 @@
-// src/pages/Signup.jsx
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import { requestRegistration } from "../services/authService";
@@ -33,32 +32,30 @@ export default function Signup() {
       setError("Password must be at least 8 characters.");
       return;
     }
-    setIsLoading(true); // start loading
+    setIsLoading(true);
     try {
       await requestRegistration(formData);
-      setIsSuccess(true); // Show success screen
+      setIsSuccess(true);
       setError("");
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.message || "Signup failed");
     } finally {
-      setIsLoading(false); // stop loading
+      setIsLoading(false);
     }
   };
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-md border border-gray-200 p-8 text-center">
-          <div className="mx-auto mb-6 w-16 h-16 flex items-center justify-center rounded-full bg-green-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-[#0e0e2e] to-gray-900 text-white px-6">
+        <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-xl p-8 text-center shadow-lg backdrop-blur-md">
+          <div className="mx-auto mb-6 w-16 h-16 flex items-center justify-center rounded-full bg-green-800/30">
             <svg
-              className="w-8 h-8 text-green-600"
+              className="w-8 h-8 text-green-400"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
               viewBox="0 0 24 24"
-              aria-hidden="true"
-              role="img"
             >
               <path
                 strokeLinecap="round"
@@ -67,22 +64,18 @@ export default function Signup() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-extrabold text-green-600 mb-2">
+          <h2 className="text-2xl font-bold text-green-400 mb-2">
             Registration Successful
           </h2>
-          <p className="text-gray-700 text-base mb-4">
-            Thank you for registering. Please activate your account using the
-            link sent to:
+          <p className="text-gray-300 mb-4">
+            Please check your inbox to activate your account:
           </p>
-          <p
-            className="text-gray-900 font-semibold mb-6 break-words select-text"
-            aria-live="polite"
-          >
+          <p className="text-white font-medium mb-6 break-words">
             {formData.email}
           </p>
-          <p className="text-gray-500 text-sm">
-            If you don’t see the email soon, check your spam folder. Once
-            activated, you can log in and access all features.
+          <p className="text-sm text-gray-400">
+            Check spam if you don’t see the email. After activation, you can log
+            in and access the platform.
           </p>
         </div>
       </div>
@@ -90,19 +83,20 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-xl p-8">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-[#0e0e2e] to-gray-900 text-white px-4">
+      <div className="max-w-md w-full bg-white/5 border border-white/10 shadow-lg rounded-xl p-8 backdrop-blur-sm">
+        <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
           Create Your Account
         </h2>
         <form onSubmit={handleSignup}>
-          <fieldset disabled={isLoading}>
+          <fieldset disabled={isLoading} className="space-y-4">
             <InputField
               label="Full Name"
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
+              dark
             />
             <InputField
               label="Email"
@@ -110,6 +104,7 @@ export default function Signup() {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              dark
             />
             <InputField
               label="Enrollment Number"
@@ -117,6 +112,7 @@ export default function Signup() {
               name="enrollmentNumber"
               value={formData.enrollmentNumber}
               onChange={handleChange}
+              dark
             />
             <InputField
               label="Password"
@@ -124,15 +120,21 @@ export default function Signup() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              dark
             />
 
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && (
+              <p className="text-red-400 text-sm mt-1 -mb-2">{error}</p>
+            )}
+
             <button
               type="submit"
               disabled={isLoading}
               className={`w-full ${
-                isLoading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-              } text-white py-2 rounded-lg transition flex justify-center items-center`}
+                isLoading
+                  ? "bg-pink-400/50 cursor-not-allowed"
+                  : "bg-pink-600 hover:bg-pink-700"
+              } text-white font-semibold py-2 px-4 rounded-lg transition flex justify-center items-center`}
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
@@ -164,9 +166,10 @@ export default function Signup() {
             </button>
           </fieldset>
         </form>
-        <p className="text-sm mt-4 text-center">
+
+        <p className="text-sm mt-4 text-center text-gray-300">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-pink-400 hover:underline transition">
             Log in
           </a>
         </p>
