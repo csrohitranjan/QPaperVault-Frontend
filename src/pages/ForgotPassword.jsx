@@ -1,4 +1,4 @@
-// src/pages/ForgetPassword.jsx
+// src/pages/ForgotPassword.jsx
 import React, { useState } from "react";
 import { requestPasswordReset } from "../services/authService";
 import { toast } from "react-toastify";
@@ -19,47 +19,56 @@ export default function ForgotPassword() {
       setLoading(true);
       const res = await requestPasswordReset(email);
       toast.success(res.data?.message);
-      setEmail(""); // Clear input field
+      setEmail("");
     } catch (err) {
       console.error("Forgot password error:", err);
-      toast.error(err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-[#0e0e2e] to-gray-900 text-white px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white/5 border border-white/10 shadow-xl rounded-xl p-8 w-full max-w-md backdrop-blur-sm"
+      >
+        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
           Forgot Password
         </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              className="mt-1 w-full border border-gray-300 rounded px-3 py-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-            disabled={loading}
-          >
-            {loading ? "Sending..." : "Send Reset Link"}
-          </button>
-        </form>
-        <p className="text-sm mt-4 text-center">
+
+        <div className="mb-4">
+          <label className="block text-sm text-gray-300 mb-1">Email</label>
+          <input
+            type="email"
+            className="w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white font-semibold transition ${
+            loading
+              ? "bg-pink-400 cursor-not-allowed"
+              : "bg-pink-600 hover:bg-pink-700"
+          }`}
+        >
+          {loading ? "Sending..." : "Send Reset Link"}
+        </button>
+
+        <p className="text-sm mt-4 text-center text-gray-400">
           Remember your password?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-pink-500 hover:underline">
             Login
           </a>
         </p>
-      </div>
+      </form>
     </div>
   );
 }

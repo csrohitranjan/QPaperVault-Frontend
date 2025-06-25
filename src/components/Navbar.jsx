@@ -3,76 +3,93 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isLogin = location.pathname === "/login";
-  const isSignup = location.pathname === "/signup";
+  const navLinks = [
+    { label: "PYQs", path: "/pyqs" },
+    { label: "Notes", path: "/notes" },
+    // { label: "About", path: "/about" },
+    { label: "Contact", path: "/contact" },
+  ];
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-  }, [isOpen]);
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+  }, [menuOpen]);
+
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-opacity-90 backdrop-blur-md shadow-lg">
-      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"> */}
-      <div className="w-full px-2 sm:px-4 lg:px-8 h-14 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-gray-900 via-[#1f1f47] to-gray-900 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl sm:text-3xl font-extrabold text-white tracking-wide"
+          className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent tracking-tight"
         >
           QPaperVault
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-6 font-medium text-white">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`text-gray-300 text-[15px] font-medium transition-all px-3 py-1 rounded-md ${
+                isActive(link.path)
+                  ? "text-white bg-white/10"
+                  : "hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop Login & Signup Buttons */}
+        <div className="hidden md:flex items-center space-x-3">
+          {/* Login: glassy outline */}
           <Link
             to="/login"
-            className={`px-5 py-2 rounded-md transition ${
-              isLogin
-                ? "bg-white text-blue-700 font-semibold shadow-md"
-                : "hover:bg-white hover:text-blue-700"
-            }`}
+            className="px-4 py-2 rounded-full font-medium text-white border border-white/30 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition duration-200 ease-in-out hover:scale-105 shadow-sm"
           >
             Login
           </Link>
+
+          {/* Signup: vibrant gradient */}
           <Link
             to="/signup"
-            className={`px-5 py-2 rounded-md transition ${
-              isSignup
-                ? "bg-white text-blue-700 font-semibold shadow-md"
-                : "hover:bg-white hover:text-blue-700"
-            }`}
+            className="px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out hover:scale-105"
           >
             Signup
           </Link>
         </div>
 
-        {/* Hamburger (Mobile) */}
+        {/* Mobile Menu Toggle */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-white focus:outline-none"
           aria-label="Toggle menu"
         >
           <svg
-            className="h-8 w-8"
+            className="w-7 h-7"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            {isOpen ? (
+            {menuOpen ? (
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth="2"
                 d="M6 18L18 6M6 6l12 12"
               />
             ) : (
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth="2"
                 d="M4 6h16M4 12h16M4 18h16"
               />
             )}
@@ -80,33 +97,41 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
+      {/* Mobile Drawer */}
+      {menuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40"
-            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+            onClick={() => setMenuOpen(false)}
           />
-          <div className="fixed top-0 right-0 h-full w-64 bg-white z-50 p-6 flex flex-col space-y-6 shadow-xl">
+          <div className="fixed top-0 right-0 w-72 h-full bg-gradient-to-b from-[#1f1f47] to-gray-900 z-50 shadow-2xl p-6 flex flex-col space-y-4 text-white rounded-l-xl">
+            <div className="text-xl font-bold mb-3">Menu</div>
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setMenuOpen(false)}
+                className={`text-[16px] font-medium px-3 py-2 rounded-md transition ${
+                  isActive(link.path) ? "bg-white/10" : "hover:bg-white/5"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <hr className="border-white/10 my-2" />
+            {/* Mobile Login */}
             <Link
               to="/login"
-              onClick={() => setIsOpen(false)}
-              className={`px-5 py-3 rounded-md font-semibold text-center transition ${
-                isLogin
-                  ? "bg-blue-700 text-white"
-                  : "text-blue-700 hover:bg-blue-700 hover:text-white"
-              }`}
+              onClick={() => setMenuOpen(false)}
+              className="w-full text-center border border-white/30 text-white rounded-full py-2 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition font-medium hover:scale-105"
             >
               Login
             </Link>
+            {/* Mobile Signup */}
             <Link
               to="/signup"
-              onClick={() => setIsOpen(false)}
-              className={`px-5 py-3 rounded-md font-semibold text-center transition ${
-                isSignup
-                  ? "bg-blue-700 text-white"
-                  : "text-blue-700 hover:bg-blue-700 hover:text-white"
-              }`}
+              onClick={() => setMenuOpen(false)}
+              className="w-full text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-full py-2 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105"
             >
               Signup
             </Link>
