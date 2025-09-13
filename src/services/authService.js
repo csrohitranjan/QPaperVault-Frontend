@@ -1,9 +1,11 @@
 // src/services/authService.js
 import axios from "axios";
 
+const BASE_URL = "http://localhost:8200";
+
 // Axios instance
 const API = axios.create({
-  baseURL: "http://localhost:8200",
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -98,3 +100,11 @@ export const getUserUploadedQuestionPapers = (token) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+// ----------------- Direct Backend Links for View / Download -----------------
+
+export const viewQuestionPaper = (questionPaperId) =>
+  `${BASE_URL}/api/v1/questionPaper/viewQuestionPaper/${questionPaperId}`;
+
+export const downloadQuestionPaper = (questionPaperId) =>
+  `${BASE_URL}/api/v1/questionPaper/downloadQuestionPaper/${questionPaperId}`;

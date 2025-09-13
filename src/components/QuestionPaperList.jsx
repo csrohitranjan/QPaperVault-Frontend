@@ -1,6 +1,6 @@
 // src/components/QuestionPaperList.jsx
 import React, { useEffect, useState } from "react";
-import { getApprovedQuestionPapers } from "../services/authService";
+import { getApprovedQuestionPapers, viewQuestionPaper, downloadQuestionPaper } from "../services/authService";
 import {
   FiSearch,
   FiDownload,
@@ -23,12 +23,6 @@ export default function QuestionPaperList() {
   const [currentPage, setCurrentPage] = useState(1);
   const papersPerPage = 12; // 3 columns x 4 rows
 
-  const getDownloadUrl = (url) => {
-    const parts = url.split("/upload/");
-    return parts.length === 2
-      ? `${parts[0]}/upload/fl_attachment/${parts[1]}`
-      : url;
-  };
 
   useEffect(() => {
     async function fetchPapers() {
@@ -83,6 +77,19 @@ export default function QuestionPaperList() {
     indexOfLastPaper
   );
   const totalPages = Math.ceil(filteredPapers.length / papersPerPage);
+
+
+  const handleViewPaper = (questionPaperId) => {
+    const res = viewQuestionPaper(questionPaperId);
+    // console.log(res)
+    setPreviewUrl(res);
+  };
+
+  const handleDownloadPaper = (questionPaperId) => {
+    const res = downloadQuestionPaper(questionPaperId);
+    // console.log(res)
+    window.open(res, "_blank");
+  };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-[#121236] to-gray-900 text-white">
@@ -173,14 +180,34 @@ export default function QuestionPaperList() {
 
                 <div className="mt-6 flex gap-2">
                   <button
-                    onClick={() => setPreviewUrl(paper.fileUrl)}
+                    onClick={() => handleViewPaper(paper._id)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg"
+                  >
+                    <FiEye size={16} />
+                    View
+                  </button>
+
+                  <a
+                    onClick={() => handleDownloadPaper(paper._id)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg cursor-pointer"
+                  >
+                    <FiDownload size={16} />
+                    Download
+                  </a>
+                </div>
+
+
+
+                {/* <div className="mt-6 flex gap-2">
+                  <button
+                    onClick={() => handleViewPaper(paper._id)}
                     className="flex-1 flex items-center justify-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-semibold text-sm transition"
                   >
                     <FiEye size={16} />
                     View
                   </button>
                   <a
-                    href={getDownloadUrl(paper.fileUrl)}
+                    onClick={() => handleDownloadPaper(paper._id)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-md font-semibold text-sm transition"
@@ -188,7 +215,10 @@ export default function QuestionPaperList() {
                     <FiDownload size={16} />
                     Download
                   </a>
-                </div>
+                </div> */}
+
+
+
               </article>
             ))
           )}
@@ -201,11 +231,10 @@ export default function QuestionPaperList() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
               aria-label="Previous Page"
-              className={`p-2 rounded-full transition-transform duration-200 ${
-                currentPage === 1
-                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
-              }`}
+              className={`p-2 rounded-full transition-transform duration-200 ${currentPage === 1
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
+                }`}
             >
               <FiChevronLeft size={16} />
             </button>
@@ -221,11 +250,10 @@ export default function QuestionPaperList() {
               }
               disabled={currentPage === totalPages}
               aria-label="Next Page"
-              className={`p-2 rounded-full transition-transform duration-200 ${
-                currentPage === totalPages
-                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
-              }`}
+              className={`p-2 rounded-full transition-transform duration-200 ${currentPage === totalPages
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
+                }`}
             >
               <FiChevronRight size={16} />
             </button>
