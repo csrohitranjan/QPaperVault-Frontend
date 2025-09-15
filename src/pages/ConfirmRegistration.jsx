@@ -1,5 +1,5 @@
 // src/pages/ConfirmRegistration.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { confirmRegistration } from "../services/authService";
 
@@ -8,43 +8,37 @@ export default function ConfirmRegistration() {
   const token = searchParams.get("token");
 
   const [status, setStatus] = useState({
-    loading: true,
-    success: false,
+    loading: false,
+    success: null,
     message: "",
   });
 
-  const hasVerified = useRef(false);
+  const handleConfirmActivation = async () => {
+    if (!token) return;
 
-  useEffect(() => {
-    if (!token || hasVerified.current) return;
+    setStatus({ loading: true, success: null, message: "" });
 
-    hasVerified.current = true;
-
-    const verifyAccount = async () => {
-      try {
-        const { data } = await confirmRegistration(token);
-        setStatus({
-          loading: false,
-          success: data.success,
-          message:
-            data.message ||
-            (data.success
-              ? "Your account has been successfully activated!"
-              : "Activation failed. Please contact support."),
-        });
-      } catch (error) {
-        setStatus({
-          loading: false,
-          success: false,
-          message:
-            error.response?.data?.message ||
-            "Something went wrong during activation. Please try again later.",
-        });
-      }
-    };
-
-    verifyAccount();
-  }, [token]);
+    try {
+      const { data } = await confirmRegistration(token);
+      setStatus({
+        loading: false,
+        success: data.success,
+        message:
+          data.message ||
+          (data.success
+            ? "Your account has been successfully activated!"
+            : "Activation failed. Please contact support."),
+      });
+    } catch (error) {
+      setStatus({
+        loading: false,
+        success: false,
+        message:
+          error.response?.data?.message ||
+          "Something went wrong during activation. Please try again later.",
+      });
+    }
+  };
 
   if (status.loading) {
     return (
@@ -57,41 +51,61 @@ export default function ConfirmRegistration() {
     );
   }
 
+  if (status.success !== null) {
+    return (
+      <CenteredCard>
+        {status.success ? (
+          <>
+            <CheckCircle />
+            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+              Account Activated
+            </h1>
+            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+              {status.message}
+            </p>
+            <Link
+              to="/login"
+              className="mt-8 inline-block bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition"
+            >
+              Proceed to Login
+            </Link>
+          </>
+        ) : (
+          <>
+            <XCircle />
+            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+              Activation Failed
+            </h1>
+            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+              {status.message}
+            </p>
+            <Link
+              to="/support"
+              className="mt-8 inline-block bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-red-600 hover:to-red-800 transition"
+            >
+              Contact Support
+            </Link>
+          </>
+        )}
+      </CenteredCard>
+    );
+  }
+
+  // Initial confirmation screen
   return (
     <CenteredCard>
-      {status.success ? (
-        <>
-          <CheckCircle />
-          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Account Activated
-          </h1>
-          <p className="mt-2 text-gray-600 max-w-md mx-auto">
-            {status.message}
-          </p>
-          <Link
-            to="/login"
-            className="mt-8 inline-block bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition"
-          >
-            Proceed to Login
-          </Link>
-        </>
-      ) : (
-        <>
-          <XCircle />
-          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Activation Failed
-          </h1>
-          <p className="mt-2 text-gray-600 max-w-md mx-auto">
-            {status.message}
-          </p>
-          <Link
-            to="/support"
-            className="mt-8 inline-block bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-red-600 hover:to-red-800 transition"
-          >
-            Contact Support
-          </Link>
-        </>
-      )}
+      <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+        Confirm Account Activation
+      </h1>
+      <p className="mt-2 text-gray-600 max-w-md mx-auto">
+        Are you sure you want to activate your account?
+      </p>
+      <button
+        onClick={handleConfirmActivation}
+        className="mt-8 inline-block bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition"
+      >
+        Confirm Activation
+      </button>
     </CenteredCard>
   );
 }
