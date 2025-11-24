@@ -145,7 +145,8 @@ export default function QuestionPaperList() {
         </div>
 
         {/* Papers Grid */}
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full overflow-hidden">
+
           {loading ? (
             <p className="col-span-full text-center text-gray-400 text-lg font-medium">
               Fetching Question Papers...
@@ -158,7 +159,7 @@ export default function QuestionPaperList() {
             currentPapers.map((paper) => (
               <article
                 key={paper._id}
-                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:shadow-xl hover:bg-white/10 transition"
+                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:shadow-xl hover:bg-white/10 transition w-full overflow-hidden"
               >
                 <div>
                   <h2 className="text-xl font-semibold text-white truncate">
@@ -178,10 +179,11 @@ export default function QuestionPaperList() {
                   </p>
                 </div>
 
-                <div className="mt-6 flex gap-2">
+                <div className="mt-6 flex gap-2 w-full overflow-hidden">
+
                   <button
                     onClick={() => handleViewPaper(paper._id)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg"
+                    className="flex-1 w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg"
                   >
                     <FiEye size={16} />
                     View
@@ -189,7 +191,7 @@ export default function QuestionPaperList() {
 
                   <a
                     onClick={() => handleDownloadPaper(paper._id)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg cursor-pointer"
+                    className="flex-1 w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg cursor-pointer"
                   >
                     <FiDownload size={16} />
                     Download
