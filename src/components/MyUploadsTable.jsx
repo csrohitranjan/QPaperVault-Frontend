@@ -63,13 +63,12 @@ export default function MyUploadsTable() {
               <td className="px-6 py-2">{upload.year}</td>
               <td className="px-6 py-2">{upload.month}</td>
               <td
-                className={`px-6 py-2 capitalize ${
-                  upload.status === "approved"
-                    ? "text-green-600 font-semibold"
-                    : upload.status === "reject"
+                className={`px-6 py-2 capitalize ${upload.status === "approved"
+                  ? "text-green-600 font-semibold"
+                  : upload.status === "reject"
                     ? "text-red-600 font-semibold"
                     : ""
-                }`}
+                  }`}
               >
                 {upload.status}
               </td>

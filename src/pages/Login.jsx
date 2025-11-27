@@ -1,5 +1,6 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { setAuthData } from "../utils/auth";
 import { loginUser } from "../services/authService";
 import { toast } from "react-toastify";
@@ -8,13 +9,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // If user was sent here from a ProtectedRoute, original route is stored here
+  const fromProtected = location.state?.from?.pathname;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
-      const res = await loginUser({ email, password });
+      const res = await loginUser({ email: email.trim(), password });
 
       if (res.data.success) {
         const { accessToken, user } = res.data;
@@ -22,23 +29,26 @@ export default function Login() {
         console.log("Login Success", user);
         setAuthData(accessToken, user);
 
-        switch (user.role) {
-          case "student":
-            navigate("/student-dashboard");
-            break;
-          case "educator":
-            navigate("/educator-dashboard");
-            break;
-          case "admin":
-            navigate("/admin-dashboard");
-            break;
-          default:
-            navigate("/");
+        // If came from a protected route (e.g. /pyqs) → go back there
+        if (fromProtected) {
+          return navigate(fromProtected, { replace: true });
         }
+
+        // Else go back one step in history (if there is one)
+        if (window.history.length > 1) {
+          return navigate(-1);
+        }
+
+        // Fallback → go home
+        return navigate("/");
       }
     } catch (err) {
       console.error("Login Error", err);
-      toast.error(err.response.data.message);
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Login failed. Please try again.";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -55,6 +65,7 @@ export default function Login() {
             Login to QPaperVault
           </h2>
 
+          {/* Email field */}
           <div className="mb-4">
             <label className="block text-sm text-gray-300 mb-1">Email</label>
             <input
@@ -67,6 +78,7 @@ export default function Login() {
             />
           </div>
 
+          {/* Password field */}
           <div className="mb-2">
             <label className="block text-sm text-gray-300 mb-1">Password</label>
             <input
@@ -80,23 +92,24 @@ export default function Login() {
             />
           </div>
 
+          {/* Forgot password link */}
           <div className="mb-6 text-right">
-            <a
-              href="/forgot-password"
+            <Link
+              to="/forgot-password"
               className="text-sm text-pink-400 hover:underline"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
+          {/* Login button */}
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full flex items-center justify-center gap-2 ${
-              isLoading
-                ? "bg-pink-400 cursor-not-allowed"
-                : "bg-pink-600 hover:bg-pink-700"
-            } text-white font-semibold py-2 px-4 rounded transition`}
+            className={`w-full flex items-center justify-center gap-2 ${isLoading
+              ? "bg-pink-400 cursor-not-allowed"
+              : "bg-pink-600 hover:bg-pink-700"
+              } text-white font-semibold py-2 px-4 rounded transition`}
           >
             {isLoading ? (
               <>
@@ -126,6 +139,18 @@ export default function Login() {
               "Login"
             )}
           </button>
+
+          {/* Don't have an account? Signup link */}
+          <p className="mt-4 text-sm text-center text-gray-300">
+            {/* This text helps new users quickly navigate to the signup page */}
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-pink-400 font-medium hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
         </fieldset>
       </form>
     </div>

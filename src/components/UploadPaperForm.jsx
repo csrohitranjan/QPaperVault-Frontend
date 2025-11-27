@@ -156,9 +156,8 @@ export default function UploadPaperForm({ onClose }) {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-2 rounded-md text-white font-semibold ${
-            loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-          } transition`}
+          className={`w-full py-2 rounded-md text-white font-semibold ${loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            } transition`}
         >
           {loading ? "Uploading..." : "Upload Paper"}
         </button>
