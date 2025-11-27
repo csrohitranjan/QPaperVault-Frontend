@@ -1,6 +1,7 @@
 // src/components/QuestionPaperList.jsx
 import React, { useEffect, useState } from "react";
 import { getApprovedQuestionPapers, viewQuestionPaper, downloadQuestionPaper } from "../services/authService";
+import { getToken } from "../utils/auth";
 import {
   FiSearch,
   FiDownload,
@@ -28,7 +29,15 @@ export default function QuestionPaperList() {
     async function fetchPapers() {
       try {
         setLoading(true);
-        const res = await getApprovedQuestionPapers();
+        const token = getToken();
+        if (!token) {
+          console.error("No auth token found while fetching approved papers");
+          setPapers([]);
+          setFilteredPapers([]);
+          return;
+        }
+
+        const res = await getApprovedQuestionPapers(token);
         if (res.status === 200) {
           setPapers(res.data.approvedPapers);
           setFilteredPapers(res.data.approvedPapers);
