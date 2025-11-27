@@ -41,9 +41,8 @@ export default function StudentDashboard() {
     <div className="flex h-screen font-sans bg-white text-gray-900">
       {/* Sidebar */}
       <aside
-        className={`flex flex-col ${
-          sidebarOpen ? "w-64" : "w-20"
-        } bg-indigo-900 text-white transition-all duration-300 shadow-xl`}
+        className={`flex flex-col ${sidebarOpen ? "w-64" : "w-20"
+          } bg-indigo-900 text-white transition-all duration-300 shadow-xl`}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-indigo-700">
           {sidebarOpen && (
@@ -90,10 +89,10 @@ export default function StudentDashboard() {
             {activeSection === "dashboard"
               ? "Dashboard"
               : activeSection === "uploads"
-              ? "My Uploads"
-              : activeSection === "profile"
-              ? "Profile"
-              : ""}
+                ? "My Uploads"
+                : activeSection === "profile"
+                  ? "Profile"
+                  : ""}
           </h2>
 
           <div className="relative" ref={dropdownRef}>
@@ -117,9 +116,8 @@ export default function StudentDashboard() {
                 </div>
               )}
               <svg
-                className={`w-4 h-4 text-white transition-transform ${
-                  dropdownOpen ? "rotate-180" : ""
-                }`}
+                className={`w-4 h-4 text-white transition-transform ${dropdownOpen ? "rotate-180" : ""
+                  }`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -199,11 +197,10 @@ function SidebarItem({ icon, label, active, onClick, open }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-4 py-3 px-5 rounded-lg w-full transition-colors ${
-        active
-          ? "bg-indigo-700 text-white font-semibold"
-          : "hover:bg-indigo-800 hover:text-white text-indigo-300"
-      }`}
+      className={`flex items-center gap-4 py-3 px-5 rounded-lg w-full transition-colors ${active
+        ? "bg-indigo-700 text-white font-semibold"
+        : "hover:bg-indigo-800 hover:text-white text-indigo-300"
+        }`}
     >
       {icon}
       {open && <span className="truncate">{label}</span>}

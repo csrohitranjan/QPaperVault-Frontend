@@ -42,9 +42,8 @@ export default function AdminDashboard() {
     <div className="flex h-screen font-sans bg-gradient-to-b from-gray-50 to-white text-gray-900">
       {/* Sidebar */}
       <aside
-        className={`flex flex-col ${
-          sidebarOpen ? "w-72" : "w-20"
-        } bg-gradient-to-b from-indigo-700 via-indigo-800 to-indigo-900 text-indigo-100 transition-width duration-300 shadow-lg`}
+        className={`flex flex-col ${sidebarOpen ? "w-72" : "w-20"
+          } bg-gradient-to-b from-indigo-700 via-indigo-800 to-indigo-900 text-indigo-100 transition-width duration-300 shadow-lg`}
       >
         <div className="flex items-center justify-between px-6 py-6 border-b border-indigo-600">
           {sidebarOpen && (
@@ -102,12 +101,12 @@ export default function AdminDashboard() {
             {activeSection === "dashboard"
               ? "Dashboard"
               : activeSection === "uploads"
-              ? "My Uploads"
-              : activeSection === "requests"
-              ? "Upload Requests"
-              : activeSection === "profile"
-              ? "Profile"
-              : ""}
+                ? "My Uploads"
+                : activeSection === "requests"
+                  ? "Upload Requests"
+                  : activeSection === "profile"
+                    ? "Profile"
+                    : ""}
           </h2>
 
           {/* User Dropdown */}
@@ -137,9 +136,8 @@ export default function AdminDashboard() {
                 </span>
               </div>
               <svg
-                className={`w-5 h-5 text-white transition-transform duration-300 ${
-                  dropdownOpen ? "rotate-180" : ""
-                }`}
+                className={`w-5 h-5 text-white transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""
+                  }`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -248,11 +246,10 @@ function SidebarItem({ icon, label, active, onClick, open }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors w-full text-left ${
-        active
+      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors w-full text-left ${active
           ? "bg-indigo-600 shadow-md text-white font-semibold"
           : "hover:bg-indigo-600 hover:text-white text-indigo-300"
-      }`}
+        }`}
       aria-current={active ? "page" : undefined}
     >
       {icon}

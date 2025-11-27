@@ -95,11 +95,10 @@ export default function ResetPassword() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full flex items-center justify-center gap-2 ${
-            loading
-              ? "bg-pink-400 cursor-not-allowed"
-              : "bg-pink-600 hover:bg-pink-700"
-          } text-white font-semibold py-2 px-4 rounded transition`}
+          className={`w-full flex items-center justify-center gap-2 ${loading
+            ? "bg-pink-400 cursor-not-allowed"
+            : "bg-pink-600 hover:bg-pink-700"
+            } text-white font-semibold py-2 px-4 rounded transition`}
         >
           {loading ? (
             <>

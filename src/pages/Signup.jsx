@@ -130,11 +130,10 @@ export default function Signup() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full ${
-                isLoading
+              className={`w-full ${isLoading
                   ? "bg-pink-400/50 cursor-not-allowed"
                   : "bg-pink-600 hover:bg-pink-700"
-              } text-white font-semibold py-2 px-4 rounded-lg transition flex justify-center items-center`}
+                } text-white font-semibold py-2 px-4 rounded-lg transition flex justify-center items-center`}
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">

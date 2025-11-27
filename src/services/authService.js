@@ -82,8 +82,13 @@ export const rejectQuestionPaper = (questionPaperId, remark, token) =>
   );
 
 
-export const getApprovedQuestionPapers = () =>
-  API.get("/api/v1/questionPaper/getApprovedQuestionPapers");
+export const getApprovedQuestionPapers = (token) =>
+  API.get("/api/v1/questionPaper/getApprovedQuestionPapers", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
 
 
 export const getPendingQuestionPapers = (token) =>

@@ -250,11 +250,10 @@ export default function UserProfile({ user }) {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className={`px-4 py-1.5 text-xs font-semibold text-white transition rounded ${
-                  canSubmit
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-red-600 cursor-not-allowed"
-                }`}
+                className={`px-4 py-1.5 text-xs font-semibold text-white transition rounded ${canSubmit
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-red-600 cursor-not-allowed"
+                  }`}
               >
                 Update
               </button>
