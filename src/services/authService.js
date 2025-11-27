@@ -1,7 +1,7 @@
 // src/services/authService.js
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8200";
+const BASE_URL = "https://api.rohitranjan.in";
 
 // Axios instance
 const API = axios.create({
