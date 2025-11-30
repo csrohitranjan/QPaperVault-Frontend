@@ -22,7 +22,7 @@ export default function ErrorPage() {
       </div>
       <div className="mt-10 text-sm text-gray-500">
         If you think this is a mistake, please{" "}
-        <a href="mailto:support@example.com" className="underline">
+        <a href="mailto:rohit.backend@gmail.com" className="underline">
           contact support
         </a>
         .
