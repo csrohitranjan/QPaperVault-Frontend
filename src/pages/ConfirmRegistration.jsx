@@ -80,7 +80,7 @@ export default function ConfirmRegistration() {
               {status.message}
             </p>
             <Link
-              to="/support"
+              to="/contact"
               className="mt-8 inline-block bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-red-600 hover:to-red-800 transition"
             >
               Contact Support
