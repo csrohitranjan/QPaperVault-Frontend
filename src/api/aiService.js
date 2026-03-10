@@ -33,3 +33,12 @@ export const generateMockTest = async (paperCode) => {
 
   return response.data;
 };
+
+export const getRevisionRanking = async (paperCode) => {
+
+  const response = await API.post("/api/v1/revision-ranking", {
+    paperCode,
+  });
+
+  return response.data;
+};
