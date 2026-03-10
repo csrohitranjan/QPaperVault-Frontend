@@ -25,3 +25,11 @@ export const getTopicWeightage = async (paperCode) => {
 
   return response.data;
 };
+
+export const generateMockTest = async (paperCode) => {
+  const response = await API.post("/api/v1/generate-mock-test", {
+    paperCode,
+  });
+
+  return response.data;
+};

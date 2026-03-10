@@ -8,6 +8,7 @@ import MyUploadsTable from "../components/MyUploadsTable";
 import UserProfile from "../components/UserProfile";
 import SmartPatternFinder from "../components/ai/SmartPatternFinder"
 import ExamBlueprintDNA from "../components/ai/ExamBlueprintDNA";
+import PredictiveMockTest from "../components/ai/PredictiveMockTest";
 
 
 export default function StudentDashboard() {
@@ -91,6 +92,14 @@ export default function StudentDashboard() {
             label="Exam Blueprint DNA"
             active={activeSection === "blueprint"}
             onClick={() => setActiveSection("blueprint")}
+            open={sidebarOpen}
+          />
+
+          <SidebarItem
+            icon={<Brain size={20} />}
+            label="Predictive AI Mock Test"
+            active={activeSection === "mockTest"}
+            onClick={() => setActiveSection("mockTest")}
             open={sidebarOpen}
           />
         </nav>
@@ -204,6 +213,7 @@ export default function StudentDashboard() {
           {activeSection === "profile" && <UserProfile user={user} />}
           {activeSection === "patternFinder" && <SmartPatternFinder />}
           {activeSection === "blueprint" && <ExamBlueprintDNA />}
+          {activeSection === "mockTest" && <PredictiveMockTest />}
         </main>
       </div>
 
