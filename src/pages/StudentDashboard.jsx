@@ -10,6 +10,7 @@ import SmartPatternFinder from "../components/ai/SmartPatternFinder"
 import ExamBlueprintDNA from "../components/ai/ExamBlueprintDNA";
 import PredictiveMockTest from "../components/ai/PredictiveMockTest";
 import EmergencyPassMaster from "../components/ai/EmergencyPassMaster";
+import MasterclassNotes from "../components/ai/MasterclassNotes";
 
 export default function StudentDashboard() {
   const user = getUser();
@@ -107,6 +108,14 @@ export default function StudentDashboard() {
             label="Emergency Pass Master"
             active={activeSection === "emergency"}
             onClick={() => setActiveSection("emergency")}
+            open={sidebarOpen}
+          />
+
+          <SidebarItem
+            icon={<Brain size={20} />}
+            label="AI Masterclass Notes"
+            active={activeSection === "masterclass"}
+            onClick={() => setActiveSection("masterclass")}
             open={sidebarOpen}
           />
         </nav>
@@ -222,6 +231,7 @@ export default function StudentDashboard() {
           {activeSection === "blueprint" && <ExamBlueprintDNA />}
           {activeSection === "mockTest" && <PredictiveMockTest />}
           {activeSection === "emergency" && <EmergencyPassMaster />}
+          {activeSection === "masterclass" && <MasterclassNotes />}
         </main>
       </div>
 

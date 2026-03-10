@@ -42,3 +42,13 @@ export const getRevisionRanking = async (paperCode) => {
 
   return response.data;
 };
+
+export const getStudyNotes = async (paperCode) => {
+
+  const response = await API.post("/api/v1/study-notes", {
+    paperCode,
+  });
+
+  return response.data;
+
+};
