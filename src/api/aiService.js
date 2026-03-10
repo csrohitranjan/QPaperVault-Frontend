@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AI_API_BASE_URL = "http://127.0.0.1:8000";
+const AI_API_BASE_URL = "http://localhost:8000";
 
 const API = axios.create({
   baseURL: AI_API_BASE_URL,
@@ -9,46 +9,49 @@ const API = axios.create({
   },
 });
 
-export const getRepeatedQuestions = async (paperCode) => {
-  const response = await API.post("/api/v1/repeated-questions", {
-    paperCode,
-  });
+// Note: No interceptor needed, tokens passed explicitly
 
+export const getRepeatedQuestions = async (paperCode, token) => {
+  const response = await API.post(
+    "/api/v1/repeated-questions",
+    { paperCode },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
 };
 
-
-export const getTopicWeightage = async (paperCode) => {
-  const response = await API.post("/api/v1/topic-weightage", {
-    paperCode,
-  });
-
+export const getTopicWeightage = async (paperCode, token) => {
+  const response = await API.post(
+    "/api/v1/topic-weightage",
+    { paperCode },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
 };
 
-export const generateMockTest = async (paperCode) => {
-  const response = await API.post("/api/v1/generate-mock-test", {
-    paperCode,
-  });
-
+export const generateMockTest = async (paperCode, token) => {
+  const response = await API.post(
+    "/api/v1/generate-mock-test",
+    { paperCode },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
 };
 
-export const getRevisionRanking = async (paperCode) => {
-
-  const response = await API.post("/api/v1/revision-ranking", {
-    paperCode,
-  });
-
+export const getRevisionRanking = async (paperCode, token) => {
+  const response = await API.post(
+    "/api/v1/revision-ranking",
+    { paperCode },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
 };
 
-export const getStudyNotes = async (paperCode) => {
-
-  const response = await API.post("/api/v1/study-notes", {
-    paperCode,
-  });
-
+export const getStudyNotes = async (paperCode, token) => {
+  const response = await API.post(
+    "/api/v1/study-notes",
+    { paperCode },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
   return response.data;
-
 };

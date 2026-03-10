@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import MasterclassTopicCard from "./MasterclassTopicCard";
 import { getStudyNotes } from "../../api/aiService";
+import { getToken } from "../../utils/auth";
 
 export default function MasterclassNotes() {
 
@@ -26,7 +27,8 @@ export default function MasterclassNotes() {
             setError("");
             setData(null);
 
-            const result = await getStudyNotes(paperCode);
+            const token = getToken();
+            const result = await getStudyNotes(paperCode, token);
             setData(result);
 
         } catch (err) {

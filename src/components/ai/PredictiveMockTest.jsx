@@ -3,6 +3,7 @@ import MockTestSectionCard from "./MockTestSectionCard";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { generateMockTest } from "../../api/aiService";
+import { getToken } from "../../utils/auth";
 import { Download } from "lucide-react";
 
 export default function PredictiveMockTest() {
@@ -25,8 +26,8 @@ export default function PredictiveMockTest() {
             setError("");
             setData(null);
 
-            const result = await generateMockTest(paperCode);
-
+            const token = getToken();
+            const result = await generateMockTest(paperCode, token);
             setData(result);
 
         } catch (err) {

@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Download } from "lucide-react";
 import { getRevisionRanking } from "../../api/aiService";
+import { getToken } from "../../utils/auth";
 
 export default function EmergencyPassMaster() {
 
@@ -25,7 +26,8 @@ export default function EmergencyPassMaster() {
             setError("");
             setData(null);
 
-            const result = await getRevisionRanking(paperCode);
+            const token = getToken();
+            const result = await getRevisionRanking(paperCode, token);
 
             setData(result);
 

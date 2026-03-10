@@ -3,6 +3,7 @@ import PatternResultCard from "./PatternResultCard";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getRepeatedQuestions } from "../../api/aiService";
+import { getToken } from "../../utils/auth";
 
 export default function SmartPatternFinder() {
 
@@ -24,7 +25,8 @@ export default function SmartPatternFinder() {
             setError("");
             setData(null);
 
-            const result = await getRepeatedQuestions(paperCode);
+            const token = getToken();
+            const result = await getRepeatedQuestions(paperCode, token);
             setData(result);
 
         } catch (err) {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { getTopicWeightage } from "../../api/aiService";
+import { getToken } from "../../utils/auth";
 import TopicWeightageChart from "./TopicWeightageChart";
 import TopicInsightCard from "./TopicInsightCard";
 
@@ -26,7 +27,8 @@ export default function ExamBlueprintDNA() {
       setError("");
       setData(null);
 
-      const result = await getTopicWeightage(paperCode);
+      const token = getToken();
+      const result = await getTopicWeightage(paperCode, token);
       setData(result);
 
     } catch (err) {
