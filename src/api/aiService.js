@@ -12,45 +12,50 @@ const API = axios.create({
 // Note: No interceptor needed, tokens passed explicitly
 
 export const getRepeatedQuestions = async (paperCode, token) => {
+  const sanitizedCode = paperCode.replace(/\s+/g, "").toUpperCase();
   const response = await API.post(
     "/api/v1/repeated-questions",
-    { paperCode },
+    { paperCode: sanitizedCode },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };
 
 export const getTopicWeightage = async (paperCode, token) => {
+  const sanitizedCode = paperCode.replace(/\s+/g, "").toUpperCase();
   const response = await API.post(
     "/api/v1/topic-weightage",
-    { paperCode },
+    { paperCode: sanitizedCode },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };
 
 export const generateMockTest = async (paperCode, token) => {
+  const sanitizedCode = paperCode.replace(/\s+/g, "").toUpperCase();
   const response = await API.post(
     "/api/v1/generate-mock-test",
-    { paperCode },
+    { paperCode: sanitizedCode },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };
 
 export const getRevisionRanking = async (paperCode, token) => {
+  const sanitizedCode = paperCode.replace(/\s+/g, "").toUpperCase();
   const response = await API.post(
     "/api/v1/revision-ranking",
-    { paperCode },
+    { paperCode: sanitizedCode },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };
 
 export const getStudyNotes = async (paperCode, token) => {
+  const sanitizedCode = paperCode.replace(/\s+/g, "").toUpperCase();
   const response = await API.post(
     "/api/v1/study-notes",
-    { paperCode },
+    { paperCode: sanitizedCode },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;

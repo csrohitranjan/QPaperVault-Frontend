@@ -42,9 +42,9 @@ export default function UploadPaperForm({ onClose }) {
     try {
       const data = new FormData();
       data.append("paperName", formData.paperName);
-      data.append("paperCode", formData.paperCode);
-      data.append("department", formData.department);
-      data.append("programme", formData.programme);
+      data.append("paperCode", formData.paperCode.replace(/\s+/g, "").toUpperCase());
+      data.append("department", formData.department.replace(/\s+/g, "").toUpperCase());
+      data.append("programme", formData.programme.replace(/\s+/g, "").toUpperCase());
       data.append("month", formData.month);
       data.append("year", formData.year);
       data.append("questionPaper", file);
