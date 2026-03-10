@@ -193,25 +193,22 @@ export default function PredictiveMockTest() {
                 <div className="space-y-6">
 
                     {/* Summary */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-md px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                    {/* Summary */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-md px-6 py-4 flex justify-between text-sm">
 
-                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-700">
+                        <div>
+                            <span className="text-gray-500">Paper:</span>{" "}
+                            <span className="font-semibold">{data.paperName}</span>
+                        </div>
 
-                            <div>
-                                <span className="text-gray-500">Paper:</span>{" "}
-                                <span className="font-medium">{data.paperName}</span>
-                            </div>
+                        <div>
+                            <span className="text-gray-500">Code:</span>{" "}
+                            <span className="font-semibold">{data.paperCode}</span>
+                        </div>
 
-                            <div>
-                                <span className="text-gray-500">Code:</span>{" "}
-                                <span className="font-medium">{data.paperCode}</span>
-                            </div>
-
-                            <div>
-                                <span className="text-gray-500">Total Marks:</span>{" "}
-                                <span className="font-medium">{data.totalMarks}</span>
-                            </div>
-
+                        <div>
+                            <span className="text-gray-500">Total Marks:</span>{" "}
+                            <span className="font-semibold">{data.totalMarks}</span>
                         </div>
 
                     </div>
