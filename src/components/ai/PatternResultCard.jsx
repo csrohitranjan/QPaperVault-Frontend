@@ -9,7 +9,7 @@ export default function PatternResultCard({ questionData, index }) {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg px-5 py-4">
+        <div className="bg-white border border-gray-200 rounded-lg px-5 py-4 hover:shadow-sm transition">
 
             {/* Header Row */}
             <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -31,7 +31,7 @@ export default function PatternResultCard({ questionData, index }) {
                 {/* Appeared In */}
                 <div className="flex flex-wrap gap-2">
 
-                    {questionData.appearedIn.map((item, i) => (
+                    {questionData.appearedIn?.map((item, i) => (
                         <span
                             key={i}
                             className="bg-gray-50 border border-gray-200 px-2 py-0.5 rounded text-xs text-gray-600"

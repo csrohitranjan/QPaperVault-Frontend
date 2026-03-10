@@ -3,10 +3,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { getUser, logoutUser } from "../utils/auth";
 import Modal from "../components/Modal";
 import UploadPaperForm from "../components/UploadPaperForm";
-import { FileText, LogOut, Menu, Plus, User, Home } from "lucide-react";
+import { FileText, LogOut, Menu, Plus, User, Home, Brain } from "lucide-react";
 import MyUploadsTable from "../components/MyUploadsTable";
 import UserProfile from "../components/UserProfile";
-import SmartPatternFinder from "../components/ai/SmartPatternFinder";
+import SmartPatternFinder from "../components/ai/SmartPatternFinder"
+import ExamBlueprintDNA from "../components/ai/ExamBlueprintDNA";
 
 
 export default function StudentDashboard() {
@@ -82,6 +83,14 @@ export default function StudentDashboard() {
             label="Smart Pattern Finder"
             active={activeSection === "patternFinder"}
             onClick={() => setActiveSection("patternFinder")}
+            open={sidebarOpen}
+          />
+
+          <SidebarItem
+            icon={<Brain size={20} />}
+            label="Exam Blueprint DNA"
+            active={activeSection === "blueprint"}
+            onClick={() => setActiveSection("blueprint")}
             open={sidebarOpen}
           />
         </nav>
@@ -194,6 +203,7 @@ export default function StudentDashboard() {
 
           {activeSection === "profile" && <UserProfile user={user} />}
           {activeSection === "patternFinder" && <SmartPatternFinder />}
+          {activeSection === "blueprint" && <ExamBlueprintDNA />}
         </main>
       </div>
 
