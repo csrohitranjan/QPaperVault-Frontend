@@ -6,6 +6,8 @@ import UploadPaperForm from "../components/UploadPaperForm";
 import { FileText, LogOut, Menu, Plus, User, Home } from "lucide-react";
 import MyUploadsTable from "../components/MyUploadsTable";
 import UserProfile from "../components/UserProfile";
+import SmartPatternFinder from "../components/ai/SmartPatternFinder";
+
 
 export default function StudentDashboard() {
   const user = getUser();
@@ -72,6 +74,14 @@ export default function StudentDashboard() {
             label="My Uploads"
             active={activeSection === "uploads"}
             onClick={() => setActiveSection("uploads")}
+            open={sidebarOpen}
+          />
+
+          <SidebarItem
+            icon={<FileText size={20} />}
+            label="Smart Pattern Finder"
+            active={activeSection === "patternFinder"}
+            onClick={() => setActiveSection("patternFinder")}
             open={sidebarOpen}
           />
         </nav>
@@ -183,6 +193,7 @@ export default function StudentDashboard() {
           )}
 
           {activeSection === "profile" && <UserProfile user={user} />}
+          {activeSection === "patternFinder" && <SmartPatternFinder />}
         </main>
       </div>
 
