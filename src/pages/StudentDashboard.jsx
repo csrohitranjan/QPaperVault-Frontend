@@ -182,7 +182,7 @@ export default function StudentDashboard() {
 
           <div className={`${activeSection === "dashboard" || activeSection === "profile" ? "max-w-6xl w-full" : "max-w-full w-full"} mx-auto h-full flex flex-col`}>
             {activeSection === "dashboard" && (
-              <section className="animate-fade-in relative h-full flex flex-col">
+              <section className="animate-fade-in relative h-full flex flex-col overflow-y-auto styled-scrollbar pb-20 md:pb-0 pr-1 md:pr-0">
                 {/* Background DNA - Prismatic Grid & Glow */}
                 <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
@@ -227,7 +227,7 @@ export default function StudentDashboard() {
                 </div>
 
                 {/* Command Module Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 h-full max-h-[400px]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 h-auto md:h-full md:max-h-[400px] min-h-[500px] md:min-h-0 shrink-0 mb-10 md:mb-0">
                    <div 
                       onClick={() => setActiveSection("uploads")}
                       className="bg-white/[0.03] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl hover:border-blue-500/30 hover:bg-white/[0.05] transition-all duration-500 cursor-pointer group relative overflow-hidden flex flex-col justify-end"
@@ -293,7 +293,7 @@ export default function StudentDashboard() {
             )}
 
             {activeSection === "profile" && (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in h-full overflow-y-auto styled-scrollbar pb-20 md:pb-0 pr-1 md:pr-0">
                 <UserProfile user={user} />
               </div>
             )}

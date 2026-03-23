@@ -4,10 +4,10 @@ import { FiBookOpen, FiFileText, FiUsers } from "react-icons/fi";
 
 export default function Home() {
   return (
-    <div className="relative overflow-hidden font-sans bg-themeBg h-[calc(100vh-4rem)] flex flex-col justify-center">
+    <div className="relative overflow-x-hidden font-sans bg-themeBg min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 lg:py-0">
       {/* Subtle Background Glows */}
       <div className="absolute top-0 right-0 w-[600px] h-[500px] bg-primaryOrange/10 rounded-full pointer-events-none -z-10 blur-[130px]"></div>
-      
+
       <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
         {/* Hero Section */}
         <section className="text-center mb-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
@@ -18,9 +18,9 @@ export default function Home() {
             </span>
             v2.0 is live
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-white leading-tight">
-            Unlock the ultimate <br className="hidden md:block"/>
+            Unlock the ultimate <br className="hidden md:block" />
             <span className="text-primaryOrange">
               Knowledge Repository
             </span>
@@ -59,7 +59,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          
+
           <div className="group bg-cardBg border border-white/5 rounded-3xl p-8 hover:bg-[#2a2d3b] transition-all duration-300 shadow-xl flex flex-col items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-primaryOrange/10 flex items-center justify-center border border-primaryOrange/20 group-hover:scale-110 transition-transform">
               <FiBookOpen className="text-2xl text-primaryOrange" />
@@ -73,7 +73,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          
+
           <div className="group bg-cardBg border border-white/5 rounded-3xl p-8 hover:bg-[#2a2d3b] transition-all duration-300 shadow-xl flex flex-col items-start gap-4">
             <div className="w-14 h-14 rounded-2xl bg-primaryOrange/10 flex items-center justify-center border border-primaryOrange/20 group-hover:scale-110 transition-transform">
               <FiUsers className="text-2xl text-primaryOrange" />

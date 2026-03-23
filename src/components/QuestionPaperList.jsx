@@ -150,8 +150,7 @@ export default function QuestionPaperList() {
           </div>
         </div>
 
-        {/* Papers Grid */}
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full overflow-hidden">
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full">
 
           {loading ? (
             <p className="col-span-full text-center text-gray-400 text-lg font-medium">
@@ -184,8 +183,7 @@ export default function QuestionPaperList() {
                     Uploaded by: {paper?.uploadedBy?.fullName || "User deleted"}
                   </p>
                 </div>
-
-                <div className="mt-6 flex gap-2 w-full overflow-hidden">
+                <div className="mt-6 flex gap-3 w-full">
                   <button
                     onClick={() => handleViewPaper(paper._id)}
                     className="flex-1 w-full flex items-center justify-center gap-2 bg-primaryOrange hover:bg-orange-600 active:bg-orange-700 text-white py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[0_6px_20px_rgba(254,82,56,0.3)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primaryOrange/50"

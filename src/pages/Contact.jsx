@@ -20,7 +20,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] relative font-sans flex items-center justify-center px-4 overflow-hidden bg-themeBg text-white">
+    <div className="min-h-[calc(100vh-4rem)] relative font-sans flex items-center justify-center px-4 overflow-x-hidden bg-themeBg text-white py-12 lg:py-0">
       {/* Glow Effects */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
       <div className="absolute bottom-0 left-10 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
