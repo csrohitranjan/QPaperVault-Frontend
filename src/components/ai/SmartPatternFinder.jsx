@@ -64,7 +64,7 @@ export default function SmartPatternFinder() {
   };
 
   return (
-    <div className={`h-full flex flex-col animate-fade-in relative ${!data && !loading ? "overflow-hidden" : "p-6"}`}>
+    <div className={`flex-1 flex flex-col min-h-0 animate-fade-in relative overflow-hidden ${!data && !loading ? "" : "p-4 lg:p-6"}`}>
       
       {/* Background DNA - Grid & Glow (Only visible when dormant/loading) */}
       {(!data || loading) && (

@@ -1,10 +1,10 @@
 import React from "react";
-import { BookOpen, Target, Sparkles, MessageSquare, AlertCircle, Link2, Clock, Globe } from "lucide-react";
+import { BookOpen, Target, Sparkles, MessageSquare, AlertCircle, Link2, Clock, Globe, ChevronRight } from "lucide-react";
 
 export default function MasterclassTopicCard({ topic }) {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
-      
+
       {/* Header Metadata */}
       <div className="flex flex-wrap gap-3">
         {[
@@ -22,7 +22,7 @@ export default function MasterclassTopicCard({ topic }) {
 
       {/* Main Grid Architecture */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
+
         {/* Left Column: Key Concepts & Definitions */}
         <div className="space-y-8">
           {/* Key Concepts */}
@@ -88,7 +88,7 @@ export default function MasterclassTopicCard({ topic }) {
                         {m.question}
                       </h4>
                       <p className="text-[11.5px] font-normal text-zinc-400 leading-relaxed">
-                         {m.answer}
+                        {m.answer}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 border-t border-white/5 pt-4">
@@ -136,7 +136,7 @@ export default function MasterclassTopicCard({ topic }) {
               </div>
             )}
           </div>
-          
+
           {/* Common Mistakes */}
           {topic.commonMistakes?.length > 0 && (
             <div className="bg-red-500/5 border border-red-500/10 p-6 rounded-3xl space-y-4">
@@ -157,4 +157,4 @@ export default function MasterclassTopicCard({ topic }) {
       </div>
     </div>
   );
-}
+}

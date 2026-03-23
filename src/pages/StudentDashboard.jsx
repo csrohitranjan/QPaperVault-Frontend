@@ -299,12 +299,12 @@ export default function StudentDashboard() {
             )}
             
             {/* AI Sections - Now also Edge-to-Edge with Vertical Offset */}
-            <div className={`flex-1 flex flex-col ${activeSection !== 'dashboard' && activeSection !== 'profile' && activeSection !== 'uploads' ? 'bg-cardBg/10 border-l border-white/5' : ''}`}>
-              {activeSection === "patternFinder" && <div className="animate-fade-in h-full"><SmartPatternFinder /></div>}
-              {activeSection === "blueprint" && <div className="animate-fade-in h-full"><ExamBlueprintDNA /></div>}
-              {activeSection === "mockTest" && <div className="animate-fade-in h-full"><PredictiveMockTest /></div>}
-              {activeSection === "emergency" && <div className="animate-fade-in h-full"><EmergencyPassMaster /></div>}
-              {activeSection === "masterclass" && <div className="animate-fade-in h-full"><MasterclassNotes /></div>}
+            <div className={`flex-1 flex flex-col min-h-0 overflow-hidden ${activeSection !== 'dashboard' && activeSection !== 'profile' && activeSection !== 'uploads' ? 'bg-cardBg/10 border-l border-white/5' : ''}`}>
+              {activeSection === "patternFinder" && <div className="animate-fade-in flex-1 flex flex-col min-h-0 overflow-hidden"><SmartPatternFinder /></div>}
+              {activeSection === "blueprint" && <div className="animate-fade-in flex-1 flex flex-col min-h-0 overflow-hidden"><ExamBlueprintDNA /></div>}
+              {activeSection === "mockTest" && <div className="animate-fade-in flex-1 flex flex-col min-h-0 overflow-hidden"><PredictiveMockTest /></div>}
+              {activeSection === "emergency" && <div className="animate-fade-in flex-1 flex flex-col min-h-0 overflow-hidden"><EmergencyPassMaster /></div>}
+              {activeSection === "masterclass" && <div className="animate-fade-in flex-1 flex flex-col min-h-0 overflow-hidden"><MasterclassNotes /></div>}
             </div>
           </div>
         </main>
