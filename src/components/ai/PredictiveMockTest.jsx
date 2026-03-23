@@ -3,233 +3,221 @@ import MockTestSectionCard from "./MockTestSectionCard";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { generateMockTest } from "../../api/aiService";
-import { getToken } from "../../utils/auth";
-import { Download } from "lucide-react";
+import { Download, Cpu, Zap, Loader2, Hash, Sparkles, LayoutGrid, Play, ClipboardCheck, History } from "lucide-react";
 
 export default function PredictiveMockTest() {
-
     const [paperCode, setPaperCode] = useState("");
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState("");
 
     const generateTest = async () => {
-
         if (!paperCode.trim()) {
-            setError("Please enter a paper code.");
+            setError("Target Paper Code Required.");
             return;
         }
 
         try {
-
             setLoading(true);
             setError("");
             setData(null);
-
-            const token = getToken();
-            const result = await generateMockTest(paperCode, token);
+            const result = await generateMockTest(paperCode);
             setData(result);
-
         } catch (err) {
-
-            setError(
-                err.response?.data?.message ||
-                "Failed to generate mock test."
-            );
-
+            setError(err.response?.data?.message || "Failed to initiate AI simulation.");
         } finally {
-
             setLoading(false);
-
         }
     };
 
     const downloadPDF = () => {
-
         if (!data) return;
-
         const doc = new jsPDF();
-
         doc.setFontSize(16);
         doc.text("Predictive AI Mock Test", 14, 20);
-
         doc.setFontSize(11);
         doc.text(`Paper: ${data.paperName}`, 14, 30);
         doc.text(`Code: ${data.paperCode}`, 14, 36);
         doc.text(`Total Marks: ${data.totalMarks}`, 14, 42);
 
         let startY = 50;
-
         data.testStructure.forEach((section) => {
-
             doc.setFontSize(13);
             doc.text(section.sectionName, 14, startY);
             startY += 6;
-
             doc.setFontSize(10);
             doc.text(section.sectionDescription, 14, startY);
             startY += 6;
-
-            const rows = section.questions.map((q) => [
-                q.questionNumber,
-                q.questionText,
-                q.marks,
-                q.topic
-            ]);
-
+            const rows = section.questions.map((q) => [q.questionNumber, q.questionText, q.marks, q.topic]);
             autoTable(doc, {
                 startY,
                 head: [["#", "Question", "Marks", "Topic"]],
                 body: rows,
-                styles: {
-                    fontSize: 9
-                },
-                headStyles: {
-                    fillColor: [79, 70, 229]
-                }
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [254, 82, 56] }
             });
-
             startY = doc.lastAutoTable.finalY + 10;
-
         });
-
         doc.save(`${data.paperCode}-mock-test.pdf`);
     };
 
     return (
-        <div className="space-y-6">
+        <div className={`h-full flex flex-col animate-fade-in relative ${!data && !loading ? "overflow-hidden" : "p-6"}`}>
+            
+            {/* Background DNA - Grid & Glow */}
+            {(!data || loading) && (
+                <div className="absolute inset-0 pointer-events-none z-0">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/[0.03] blur-[150px] rounded-full"></div>
+                </div>
+            )}
 
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
+            {/* Persistent Industrial Header */}
+            <div className={`relative z-20 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 ${!data && !loading ? "p-10" : ""}`}>
                 <div>
-                    <h1 className="text-2xl font-bold">
-                        Predictive AI Mock Test 🧠
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-1 bg-orange-500 rounded-full" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">Mock Simulation Engine</span>
+                    </div>
+                    <h1 className="text-3xl font-black text-white tracking-tighter uppercase mb-1">
+                        Predictive AI Mock <span className="text-orange-400">🎯</span>
                     </h1>
-
-                    <p className="text-gray-600">
-                        Generate a full AI predicted mock exam.
+                    <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest max-w-md">
+                        Generate a full high-fidelity AI predicted mock exam based on historical patterns.
                     </p>
                 </div>
 
-                <div className="flex gap-3">
-
-                    <input
-                        type="text"
-                        placeholder="Enter Paper Code"
-                        value={paperCode}
-                        onChange={(e) => setPaperCode(e.target.value)}
-                        className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-                    />
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="relative group min-w-[200px]">
+                        <Hash size={12} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-orange-400 transition-colors" />
+                        <input
+                            type="text"
+                            placeholder="TARGET PAPER CODE"
+                            value={paperCode}
+                            onChange={(e) => setPaperCode(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/5 rounded-xl text-[10px] font-bold text-white placeholder-zinc-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30 transition-all uppercase tracking-widest"
+                        />
+                    </div>
 
                     <button
                         onClick={generateTest}
                         disabled={loading}
-                        className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-medium disabled:opacity-50"
+                        className={`px-6 py-2.5 rounded-xl font-black text-white transition-all flex items-center justify-center gap-2.5 uppercase tracking-widest text-[10px] relative overflow-hidden group ${
+                            loading 
+                                ? "bg-zinc-800 cursor-not-allowed opacity-50" 
+                                : "bg-gradient-to-br from-orange-500 to-orange-700 shadow-[0_10px_30px_rgba(254,82,56,0.3)] hover:scale-[1.02] hover:shadow-orange-500/50 active:scale-95"
+                        }`}
                     >
-                        Generate
+                        {loading ? (
+                            <>
+                                <Loader2 size={12} className="animate-spin" />
+                                Simulating...
+                            </>
+                        ) : (
+                            <>
+                                <Play size={12} className="group-hover:animate-ping" />
+                                Initiate Simulation
+                            </>
+                        )}
+                        {!loading && (
+                            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        )}
                     </button>
 
                     <button
                         onClick={downloadPDF}
                         disabled={!data}
-                        className="flex items-center gap-2 bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 font-medium disabled:opacity-50"
+                        className="flex items-center gap-2.5 px-6 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 font-black shadow-lg disabled:opacity-20 transition-all active:scale-95 uppercase tracking-widest text-[10px]"
                     >
-                        <Download size={16} />
+                        <Download size={12} />
                         Download Report
                     </button>
-
                 </div>
-
             </div>
 
-            {/* Error */}
-            {error && (
-                <div className="text-red-500 text-sm font-medium">
-                    {error}
-                </div>
-            )}
-
-            {/* Loader */}
-            {loading && (
-                <div className="flex justify-center items-center py-16">
-
-                    <div className="flex flex-col items-center gap-3 text-gray-600">
-
-                        <svg
-                            className="animate-spin h-10 w-10 text-indigo-600"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                            />
-
-                            <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v8H4z"
-                            />
-
-                        </svg>
-
-                        <span className="text-sm font-medium">
-                            Generating AI mock test...
-                        </span>
-
+            {/* Main Simulation Stage */}
+            <div className="flex-1 relative z-10 overflow-y-auto styled-scrollbar">
+                {error && (
+                    <div className="max-w-xl mx-auto mt-4 px-6 py-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-[10px] font-bold uppercase tracking-widest text-center animate-shake">
+                        {error}
                     </div>
+                )}
 
-                </div>
-            )}
+                {/* Simulation Dormant State */}
+                {!data && !loading && (
+                    <div className="h-full flex-1 flex flex-col items-center justify-center text-center -mt-20">
+                        <div className="relative mb-8">
+                            <div className="absolute inset-0 bg-orange-500/20 blur-[60px] rounded-full animate-pulse"></div>
+                            <div className="relative w-32 h-32 bg-[#0f111a] rounded-[3rem] flex items-center justify-center border border-white/10 shadow-3xl group transition-transform duration-700 hover:scale-110">
+                                <Cpu size={56} className="text-zinc-800 group-hover:text-orange-400 transition-colors duration-700" strokeWidth={0.5} />
+                            </div>
+                        </div>
+                        <div className="space-y-3">
+                            <h3 className="text-3xl font-black text-white tracking-widest uppercase">Simulation Dormant</h3>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.3em] max-w-sm mx-auto leading-relaxed">
+                                AI Exam Predictive Models Offline. Target a paper code to initiate full mock simulation.
+                            </p>
+                        </div>
+                        {/* Watermark */}
+                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4 opacity-10 pointer-events-none">
+                            <div className="h-[1px] w-12 bg-zinc-500"></div>
+                            <span className="text-[9px] uppercase tracking-[0.6em] text-zinc-500 whitespace-nowrap">Predictive Simulation Engine v4.0.1</span>
+                            <div className="h-[1px] w-12 bg-zinc-500"></div>
+                        </div>
+                    </div>
+                )}
 
-            {/* Results */}
-            {data && (
+                {/* Processing State */}
+                {loading && (
+                    <div className="h-full flex-1 flex flex-col items-center justify-center text-center -mt-20">
+                        <div className="relative mb-10">
+                            <div className="absolute inset-0 bg-orange-500/30 blur-[80px] rounded-full animate-pulse"></div>
+                            <Zap size={80} className="text-orange-500/40 animate-pulse" strokeWidth={0.5} />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-black text-white tracking-widest uppercase animate-pulse">Calculating Odds...</h3>
+                            <p className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.5em]">synthesizing historical question probability</p>
+                        </div>
+                    </div>
+                )}
 
-                <div className="space-y-6">
-
-                    {/* Summary */}
-                    {/* Summary */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-md px-6 py-4 flex justify-between text-sm">
-
-                        <div>
-                            <span className="text-gray-500">Paper:</span>{" "}
-                            <span className="font-semibold">{data.paperName}</span>
+                {/* Simulation Results Stage */}
+                {data && (
+                    <div className="space-y-8 pb-10 max-w-7xl mx-auto px-4 lg:px-6 animate-in slide-in-from-bottom-5 duration-700">
+                        {/* Summary Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {[
+                                { label: "Mock Unit", value: data.paperName, icon: Sparkles },
+                                { label: "Design Code", value: data.paperCode, icon: Hash },
+                                { label: "Total Valuation", value: `${data.totalMarks} Marks`, icon: ClipboardCheck }
+                            ].map((stat, i) => (
+                                <div key={i} className="bg-white/[0.03] border border-white/5 rounded-2xl p-4 transition-all hover:bg-white/[0.05] hover:border-white/10 group">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <stat.icon size={12} className="text-orange-400" />
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">{stat.label}</span>
+                                    </div>
+                                    <div className="text-sm font-black text-white tracking-tight truncate group-hover:text-orange-400 transition-colors uppercase">
+                                        {stat.value}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
 
-                        <div>
-                            <span className="text-gray-500">Code:</span>{" "}
-                            <span className="font-semibold">{data.paperCode}</span>
+                        {/* Sections Stream */}
+                        <div className="space-y-6">
+                           <div className="flex items-center gap-3 mb-6 px-2">
+                              <div className="w-1.5 h-6 bg-orange-500 rounded-full" />
+                              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-white">Exam Section Architecture</h4>
+                           </div>
+                           <div className="grid grid-cols-1 gap-6">
+                            {data.testStructure.map((section, index) => (
+                                <MockTestSectionCard key={index} section={section} />
+                            ))}
+                           </div>
                         </div>
-
-                        <div>
-                            <span className="text-gray-500">Total Marks:</span>{" "}
-                            <span className="font-semibold">{data.totalMarks}</span>
-                        </div>
-
                     </div>
-
-                    {/* Sections */}
-                    <div className="space-y-4">
-
-                        {data.testStructure.map((section, index) => (
-                            <MockTestSectionCard
-                                key={index}
-                                section={section}
-                            />
-                        ))}
-
-                    </div>
-
-                </div>
-
-            )}
-
+                )}
+            </div>
         </div>
     );
 }

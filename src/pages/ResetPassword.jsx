@@ -1,8 +1,10 @@
 // src/pages/ResetPassword.jsx
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { resetUserPassword } from "../services/authService";
+import { resetUserPassword } from "../api/authService";
+import InputField from "../components/InputField";
+import { FiLock, FiCheck, FiArrowRight } from "react-icons/fi";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -16,7 +18,7 @@ export default function ResetPassword() {
   useEffect(() => {
     const tokenFromUrl = searchParams.get("token");
     if (!tokenFromUrl) {
-      toast.error("Reset token is missing from URL");
+      toast.error("Reset token is missing");
       navigate("/login");
       return;
     }
@@ -25,7 +27,6 @@ export default function ResetPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (newPassword !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -40,7 +41,7 @@ export default function ResetPassword() {
       });
 
       if (res.data.status === 200) {
-        toast.success(res.data?.message);
+        toast.success(res.data?.message || "Password reset successfully!");
         navigate("/login");
       } else {
         toast.error(res.data.message);
@@ -53,82 +54,59 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-[#0e0e2e] to-gray-900 text-white px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/5 border border-white/10 shadow-xl rounded-xl p-8 w-full max-w-md backdrop-blur-sm"
-      >
-        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
-          Reset Password
-        </h2>
-
-        <div className="mb-4">
-          <label className="block text-sm text-gray-300 mb-1">
-            New Password
-          </label>
-          <input
-            type="password"
-            className="w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-            minLength={8}
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm text-gray-300 mb-1">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            className="w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            minLength={8}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full flex items-center justify-center gap-2 ${loading
-            ? "bg-pink-400 cursor-not-allowed"
-            : "bg-pink-600 hover:bg-pink-700"
-            } text-white font-semibold py-2 px-4 rounded transition`}
+    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white text-center">
+      {/* Subtle Glow */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      
+      <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10 relative"
         >
-          {loading ? (
-            <>
-              <svg
-                className="animate-spin h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
-              </svg>
-              Resetting...
-            </>
-          ) : (
-            "Reset Password"
-          )}
-        </button>
-      </form>
+          {/* Header */}
+          <div className="mb-8">
+            <div className="w-14 h-14 bg-primaryOrange/10 border border-primaryOrange/20 rounded-2xl mx-auto mb-5 flex items-center justify-center shadow-sm">
+              <FiLock className="text-primaryOrange text-2xl" />
+            </div>
+            <h2 className="text-2xl font-black text-white tracking-tight mb-1">
+              New Password
+            </h2>
+            <p className="text-textMuted text-[10px] font-bold tracking-widest uppercase opacity-60">
+              Create a secure new password
+            </p>
+          </div>
+
+          <div className="text-left space-y-4">
+            <InputField
+              label="New Password"
+              type="password"
+              name="newPassword"
+              placeholder="••••••••"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              dark
+            />
+            <InputField
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              dark
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 mt-8 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50"
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+            {!loading && <FiArrowRight className="text-base" />}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

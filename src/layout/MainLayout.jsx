@@ -1,32 +1,14 @@
-// src/layouts/MainLayout.jsx
-
 import React from "react";
 import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 
 export default function MainLayout() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen bg-themeBg">
       <Navbar />
-      <Outlet />
-    </>
+      <main className="flex-grow pt-16">
+        <Outlet />
+      </main>
+    </div>
   );
 }
-
-// // src/layouts/MainLayout.jsx
-// import React from "react";
-// import Navbar from "../components/Navbar";
-// import Footer from "../components/Footer";
-// import { Outlet } from "react-router-dom";
-
-// export default function MainLayout() {
-//   return (
-//     <>
-//       <Navbar />
-//       <main>
-//         <Outlet />
-//       </main>
-//       <Footer />
-//     </>
-//   );
-// }

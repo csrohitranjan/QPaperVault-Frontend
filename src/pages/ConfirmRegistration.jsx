@@ -1,7 +1,7 @@
 // src/pages/ConfirmRegistration.jsx
 import React, { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { confirmRegistration } from "../services/authService";
+import { confirmRegistration } from "../api/authService";
 
 export default function ConfirmRegistration() {
   const [searchParams] = useSearchParams();
@@ -44,7 +44,7 @@ export default function ConfirmRegistration() {
     return (
       <CenteredCard>
         <Spinner />
-        <p className="mt-4 text-lg text-gray-600 font-semibold tracking-wide">
+        <p className="mt-6 text-lg text-zinc-300 font-semibold tracking-wide">
           Activating your account...
         </p>
       </CenteredCard>
@@ -53,35 +53,39 @@ export default function ConfirmRegistration() {
 
   if (status.success !== null) {
     return (
-      <CenteredCard>
+      <CenteredCard glowColor={status.success ? "emerald" : "red"}>
         {status.success ? (
           <>
-            <CheckCircle />
-            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+            <div className="mx-auto mb-6 w-20 h-20 flex items-center justify-center rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <CheckCircle />
+            </div>
+            <h1 className="text-3xl font-extrabold text-white">
               Account Activated
             </h1>
-            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+            <p className="mt-3 text-textMuted font-medium max-w-sm mx-auto leading-relaxed">
               {status.message}
             </p>
             <Link
               to="/login"
-              className="mt-8 inline-block bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition"
+              className="mt-8 inline-block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-[0_4px_14px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 transition-all text-center"
             >
               Proceed to Login
             </Link>
           </>
         ) : (
           <>
-            <XCircle />
-            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+            <div className="mx-auto mb-6 w-20 h-20 flex items-center justify-center rounded-full bg-red-500/10 border border-red-500/20">
+              <XCircle />
+            </div>
+            <h1 className="text-3xl font-extrabold text-white">
               Activation Failed
             </h1>
-            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+            <p className="mt-3 text-textMuted font-medium max-w-sm mx-auto leading-relaxed">
               {status.message}
             </p>
             <Link
               to="/contact"
-              className="mt-8 inline-block bg-gradient-to-r from-red-500 to-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-red-600 hover:to-red-800 transition"
+              className="mt-8 inline-block w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-xl shadow-[0_4px_14px_rgba(239,68,68,0.3)] hover:shadow-[0_6px_20px_rgba(239,68,68,0.4)] hover:-translate-y-0.5 transition-all text-center"
             >
               Contact Support
             </Link>
@@ -93,34 +97,57 @@ export default function ConfirmRegistration() {
 
   // Initial confirmation screen
   return (
-    <CenteredCard>
-      <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
-        Confirm Account Activation
+    <CenteredCard glowColor="primary">
+      <div className="mx-auto mb-6 w-20 h-20 flex items-center justify-center rounded-full bg-primaryOrange/10 border border-primaryOrange/20 shadow-[0_0_20px_rgba(254,82,56,0.2)]">
+        <svg className="w-10 h-10 text-primaryOrange" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h1 className="text-3xl font-extrabold text-white">
+        Confirm Account
       </h1>
-      <p className="mt-2 text-gray-600 max-w-md mx-auto">
-        Are you sure you want to activate your account?
+      <p className="mt-3 text-textMuted font-medium max-w-sm mx-auto leading-relaxed">
+        You are one step away! Click the button below to activate your account and join QPaperVault.
       </p>
       <button
         onClick={handleConfirmActivation}
-        className="mt-8 inline-block bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition"
+        className="mt-8 w-full bg-primaryOrange hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl shadow-[0_4px_14px_rgba(254,82,56,0.3)] hover:shadow-[0_6px_20px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all"
       >
-        Confirm Activation
+        Activate My Account
       </button>
     </CenteredCard>
   );
 }
 
-const CenteredCard = ({ children }) => (
-  <div className="min-h-screen bg-gradient-to-tr from-indigo-50 via-white to-indigo-50 flex items-center justify-center px-6">
-    <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-10 text-center">
-      {children}
+const CenteredCard = ({ children, glowColor = "primary" }) => {
+  const glowMap = {
+    primary: "bg-primaryOrange/5",
+    emerald: "bg-emerald-500/10",
+    red: "bg-red-500/10",
+  };
+
+  const ringMap = {
+    primary: "bg-primaryOrange/10",
+    emerald: "bg-emerald-500/10",
+    red: "bg-red-500/10",
+  };
+
+  return (
+    <div className="min-h-screen relative flex items-center justify-center px-4 font-sans overflow-hidden py-24 bg-themeBg text-white">
+      {/* Dynamic Glow Background */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] ${glowMap[glowColor] || glowMap.primary} rounded-full blur-[120px] pointer-events-none -z-10 transition-colors duration-1000`}></div>
+      
+      <div className="bg-cardBg border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-3xl p-8 sm:p-12 w-full max-w-md relative z-10 text-center animate-in fade-in zoom-in-95 duration-500">
+        <div className={`absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 ${ringMap[glowColor] || ringMap.primary} opacity-50 rounded-full blur-2xl pointer-events-none -z-10 transition-colors duration-1000`}></div>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Spinner = () => (
   <svg
-    className="animate-spin h-16 w-16 text-indigo-600 mx-auto"
+    className="animate-spin h-14 w-14 text-primaryOrange mx-auto"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
@@ -143,7 +170,7 @@ const Spinner = () => (
 
 const CheckCircle = () => (
   <svg
-    className="mx-auto h-20 w-20 text-green-500"
+    className="h-10 w-10 text-emerald-400"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
@@ -160,7 +187,7 @@ const CheckCircle = () => (
 
 const XCircle = () => (
   <svg
-    className="mx-auto h-20 w-20 text-red-500"
+    className="h-10 w-10 text-red-500"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

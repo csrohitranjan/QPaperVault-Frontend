@@ -1,7 +1,10 @@
 // src/pages/ForgotPassword.jsx
 import React, { useState } from "react";
-import { requestPasswordReset } from "../services/authService";
+import { Link } from "react-router-dom";
+import { requestPasswordReset } from "../api/authService";
 import { toast } from "react-toastify";
+import InputField from "../components/InputField";
+import { FiMail, FiArrowLeft, FiSend } from "react-icons/fi";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -9,7 +12,6 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!email) {
       toast.error("Please enter your email.");
       return;
@@ -18,10 +20,9 @@ export default function ForgotPassword() {
     try {
       setLoading(true);
       const res = await requestPasswordReset(email);
-      toast.success(res.data?.message);
+      toast.success(res.data?.message || "Reset link sent!");
       setEmail("");
     } catch (err) {
-      console.error("Forgot password error:", err);
       toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
@@ -29,45 +30,57 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-950 via-[#0e0e2e] to-gray-900 text-white px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white/5 border border-white/10 shadow-xl rounded-xl p-8 w-full max-w-md backdrop-blur-sm"
-      >
-        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
-          Forgot Password
-        </h2>
-
-        <div className="mb-4">
-          <label className="block text-sm text-gray-300 mb-1">Email</label>
-          <input
-            type="email"
-            className="w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-2 rounded text-white font-semibold transition ${loading
-            ? "bg-pink-400 cursor-not-allowed"
-            : "bg-pink-600 hover:bg-pink-700"
-            }`}
+    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white text-center">
+      {/* Subtle Glow */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      
+      <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10 relative"
         >
-          {loading ? "Sending..." : "Send Reset Link"}
-        </button>
+          {/* Header */}
+          <div className="mb-8">
+            <div className="w-14 h-14 bg-primaryOrange/10 border border-primaryOrange/20 rounded-2xl mx-auto mb-5 flex items-center justify-center shadow-sm">
+              <FiMail className="text-primaryOrange text-2xl" />
+            </div>
+            <h2 className="text-2xl font-black text-white tracking-tight mb-1">
+              Reset Password
+            </h2>
+            <p className="text-textMuted text-[10px] font-bold tracking-widest uppercase opacity-60">
+              Enter your email to receive a link
+            </p>
+          </div>
 
-        <p className="text-sm mt-4 text-center text-gray-400">
-          Remember your password?{" "}
-          <a href="/login" className="text-pink-500 hover:underline">
-            Login
-          </a>
-        </p>
-      </form>
+          <div className="text-left space-y-5">
+            <InputField
+              label="Email Address"
+              type="email"
+              name="email"
+              placeholder="name@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              dark
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 mt-8 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50"
+          >
+            {loading ? "Sending..." : "Send Reset Link"}
+            {!loading && <FiSend className="text-base" />}
+          </button>
+
+          <p className="mt-8 text-[12px] font-bold text-textMuted text-center">
+            <Link to="/login" className="flex items-center justify-center gap-1.5 text-white hover:text-primaryOrange transition-colors group">
+              <FiArrowLeft className="group-hover:-translate-x-0.5 transition-transform" />
+              Back to login
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

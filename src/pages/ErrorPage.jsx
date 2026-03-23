@@ -4,28 +4,31 @@ import { Link } from "react-router-dom";
 
 export default function ErrorPage() {
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
-      <div className="text-center">
-        <div className="text-9xl font-extrabold text-blue-600 mb-4">404</div>
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white">
+      {/* Subtle Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+
+      <div className="text-center animate-in fade-in zoom-in-95 duration-700">
+        <div className="text-8xl md:text-9xl font-black text-primaryOrange mb-4 tracking-tighter">404</div>
+        <h1 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tight">
           Oops! Page not found.
         </h1>
-        <p className="text-gray-600 text-lg mb-6">
+        <p className="text-textMuted text-base font-medium mb-8 max-w-md mx-auto leading-relaxed">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Link
           to="/"
-          className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition duration-200 font-semibold"
+          className="inline-block px-8 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_14px_rgba(254,82,56,0.3)] hover:shadow-[0_6px_20px_rgba(254,82,56,0.5)] hover:-translate-y-0.5 transition-all text-sm uppercase tracking-widest"
         >
           Go to Homepage
         </Link>
-      </div>
-      <div className="mt-10 text-sm text-gray-500">
-        If you think this is a mistake, please{" "}
-        <a href="mailto:rohit.backend@gmail.com" className="underline">
-          contact support
-        </a>
-        .
+        <p className="mt-8 text-[12px] font-bold text-textMuted">
+          If you think this is a mistake,{" "}
+          <a href="mailto:rohit.backend@gmail.com" className="text-white hover:text-primaryOrange transition-colors underline decoration-primaryOrange/30 underline-offset-4">
+            contact support
+          </a>
+          .
+        </p>
       </div>
     </div>
   );

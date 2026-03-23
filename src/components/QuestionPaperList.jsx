@@ -1,6 +1,6 @@
 // src/components/QuestionPaperList.jsx
 import React, { useEffect, useState } from "react";
-import { getApprovedQuestionPapers, viewQuestionPaper, downloadQuestionPaper } from "../services/authService";
+import { getApprovedQuestionPapers, viewQuestionPaper, downloadQuestionPaper } from "../api/authService";
 import { getToken } from "../utils/auth";
 import {
   FiSearch,
@@ -37,7 +37,7 @@ export default function QuestionPaperList() {
           return;
         }
 
-        const res = await getApprovedQuestionPapers(token);
+        const res = await getApprovedQuestionPapers();
         if (res.status === 200) {
           setPapers(res.data.approvedPapers);
           setFilteredPapers(res.data.approvedPapers);
@@ -101,16 +101,11 @@ export default function QuestionPaperList() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-950 via-[#121236] to-gray-900 text-white">
-      {/* <div className="max-w-7xl mx-auto px-4 py-20"> */}
-      <div className="max-w-7xl mx-auto px-4 pt-24 pb-20 sm:pt-28">
-        {/* 
-        <h1 className="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-indigo-400 to-pink-500 text-transparent bg-clip-text">
-          Previous Year Question Papers
-        </h1> */}
-
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
+    <div className="min-h-screen w-full bg-themeBg text-white">
+      {/* Reduced top padding to move content upward */}
+      <div className="max-w-7xl mx-auto px-4 pt-16 pb-20 sm:pt-20">
+        {/* Filters - Balanced Layout */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="relative w-full max-w-xs">
             <FiSearch
               className="absolute left-3 top-3 text-gray-400"
@@ -121,36 +116,38 @@ export default function QuestionPaperList() {
               placeholder="Search paper name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-md bg-gray-800 text-white border border-gray-700 pl-10 pr-4 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
+              className="w-full rounded-xl bg-cardBg text-white border border-white/5 pl-10 pr-4 py-2.5 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primaryOrange transition"
             />
           </div>
 
-          {/* Dropdown Filters */}
-          {[
-            ["All Codes", codeFilter, setCodeFilter, uniqueCodes],
-            ["All Programs", programFilter, setProgramFilter, uniquePrograms],
-            ["All Years", yearFilter, setYearFilter, uniqueYears],
-          ].map(([label, value, setter, options]) => (
-            <div className="relative w-44" key={label}>
-              <select
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                className="appearance-none w-full bg-gray-800 text-white border border-gray-700 py-2 px-4 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
-              >
-                <option value="All">{label}</option>
-                {options.map((opt) => (
-                  <option
-                    key={opt}
-                    value={opt}
-                    className="bg-gray-900 text-white"
-                  >
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-            </div>
-          ))}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Dropdown Filters */}
+            {[
+              ["All Codes", codeFilter, setCodeFilter, uniqueCodes],
+              ["All Programs", programFilter, setProgramFilter, uniquePrograms],
+              ["All Years", yearFilter, setYearFilter, uniqueYears],
+            ].map(([label, value, setter, options]) => (
+              <div className="relative w-full sm:w-40" key={label}>
+                <select
+                  value={value}
+                  onChange={(e) => setter(e.target.value)}
+                  className="appearance-none w-full bg-cardBg text-white border border-white/5 py-2.5 px-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primaryOrange transition"
+                >
+                  <option value="All">{label}</option>
+                  {options.map((opt) => (
+                    <option
+                      key={opt}
+                      value={opt}
+                      className="bg-themeBg text-white"
+                    >
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Papers Grid */}
@@ -168,7 +165,7 @@ export default function QuestionPaperList() {
             currentPapers.map((paper) => (
               <article
                 key={paper._id}
-                className="bg-white/5 border border-white/10 rounded-xl p-6 hover:shadow-xl hover:bg-white/10 transition w-full overflow-hidden"
+                className="bg-cardBg border border-white/5 rounded-xl p-6 shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.6)] hover:bg-white/5 transition w-full overflow-hidden"
               >
                 <div>
                   <h2 className="text-xl font-semibold text-white truncate">
@@ -189,10 +186,9 @@ export default function QuestionPaperList() {
                 </div>
 
                 <div className="mt-6 flex gap-2 w-full overflow-hidden">
-
                   <button
                     onClick={() => handleViewPaper(paper._id)}
-                    className="flex-1 w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg"
+                    className="flex-1 w-full flex items-center justify-center gap-2 bg-primaryOrange hover:bg-orange-600 active:bg-orange-700 text-white py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-[0_6px_20px_rgba(254,82,56,0.3)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primaryOrange/50"
                   >
                     <FiEye size={16} />
                     View
@@ -200,36 +196,12 @@ export default function QuestionPaperList() {
 
                   <a
                     onClick={() => handleDownloadPaper(paper._id)}
-                    className="flex-1 w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white py-2 rounded-md font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg cursor-pointer"
+                    className="flex-1 w-full flex items-center justify-center gap-2 bg-themeBg hover:bg-black/20 active:bg-black/40 border border-white/5 text-white py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 transform hover:scale-105 active:scale-95 shadow hover:shadow-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-primaryOrange/50"
                   >
                     <FiDownload size={16} />
                     Download
                   </a>
                 </div>
-
-
-
-                {/* <div className="mt-6 flex gap-2">
-                  <button
-                    onClick={() => handleViewPaper(paper._id)}
-                    className="flex-1 flex items-center justify-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-semibold text-sm transition"
-                  >
-                    <FiEye size={16} />
-                    View
-                  </button>
-                  <a
-                    onClick={() => handleDownloadPaper(paper._id)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1 bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-md font-semibold text-sm transition"
-                  >
-                    <FiDownload size={16} />
-                    Download
-                  </a>
-                </div> */}
-
-
-
               </article>
             ))
           )}
@@ -243,8 +215,8 @@ export default function QuestionPaperList() {
               disabled={currentPage === 1}
               aria-label="Previous Page"
               className={`p-2 rounded-full transition-transform duration-200 ${currentPage === 1
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
+                ? "bg-cardBg text-gray-400 border border-white/5 cursor-not-allowed"
+                : "bg-primaryOrange text-white hover:bg-orange-600 hover:scale-105 shadow-[0_4px_15px_rgba(254,82,56,0.3)]"
                 }`}
             >
               <FiChevronLeft size={16} />
@@ -262,8 +234,8 @@ export default function QuestionPaperList() {
               disabled={currentPage === totalPages}
               aria-label="Next Page"
               className={`p-2 rounded-full transition-transform duration-200 ${currentPage === totalPages
-                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                : "bg-pink-600 text-white hover:bg-pink-700 hover:scale-105"
+                ? "bg-cardBg text-gray-400 border border-white/5 cursor-not-allowed"
+                : "bg-primaryOrange text-white hover:bg-orange-600 hover:scale-105 shadow-[0_4px_15px_rgba(254,82,56,0.3)]"
                 }`}
             >
               <FiChevronRight size={16} />
@@ -279,7 +251,7 @@ export default function QuestionPaperList() {
           onClick={() => setPreviewUrl(null)}
         >
           <div
-            className="relative bg-gray-900 border border-gray-700 rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col"
+            className="relative bg-cardBg border border-white/5 rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <button

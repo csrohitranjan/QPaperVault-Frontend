@@ -1,20 +1,39 @@
 // src/pages/AdminDashboard.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { getUser, logoutUser } from "../utils/auth";
+import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "../components/Modal";
 import UploadPaperForm from "../components/UploadPaperForm";
-import { FileText, LogOut, Menu, User, Inbox, Home } from "lucide-react";
+import SidebarItem from "../components/SidebarItem";
+import { FileText, LogOut, Menu, User, Inbox, Home, LayoutDashboard, Plus, UploadCloud, Activity, ChevronRight, X } from "lucide-react";
 import UploadRequestsTable from "../components/UploadRequestsTable";
 import MyUploadsTable from "../components/MyUploadsTable";
 import UserProfile from "../components/UserProfile";
 
 export default function AdminDashboard() {
   const user = getUser();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [modalOpen, setModalOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (location.state?.section) {
+      setActiveSection(location.state.section);
+    }
+  }, [location.state]);
+
+  // Listen for navbar dashboard navigation when already on this page
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.section) setActiveSection(e.detail.section);
+    };
+    window.addEventListener("dashboardNavigate", handler);
+    return () => window.removeEventListener("dashboardNavigate", handler);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -38,192 +57,230 @@ export default function AdminDashboard() {
     window.location.href = "/login";
   };
 
+  const getSectionTitle = () => {
+    switch (activeSection) {
+      case "dashboard": return "Admin Overview";
+      case "uploads": return "My Uploads";
+      case "requests": return "Upload Requests";
+      case "profile": return "Account Settings";
+      default: return "";
+    }
+  };
+
   return (
-    <div className="flex h-screen font-sans bg-gradient-to-b from-gray-50 to-white text-gray-900">
+    <div className="flex font-sans bg-themeBg text-white h-[calc(100vh-4rem)] overflow-hidden">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile toggle button */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="fixed top-[4.5rem] left-3 z-20 md:hidden p-2 bg-cardBg border border-white/5 rounded-xl text-zinc-400 hover:text-white transition-colors"
+        aria-label="Open Sidebar"
+      >
+        <Menu size={18} />
+      </button>
+
       {/* Sidebar */}
       <aside
-        className={`flex flex-col ${sidebarOpen ? "w-72" : "w-20"
-          } bg-gradient-to-b from-indigo-700 via-indigo-800 to-indigo-900 text-indigo-100 transition-width duration-300 shadow-lg`}
+        className={`flex flex-col ${sidebarOpen ? "w-64" : "w-16"} bg-cardBg border-r border-white/5 transition-all duration-300 z-40 md:z-20 md:sticky md:top-16 md:self-start h-[calc(100vh-4rem)] shadow-2xl fixed top-16 left-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:relative`}
       >
-        <div className="flex items-center justify-between px-6 py-6 border-b border-indigo-600">
+        <div className="flex items-center justify-between px-5 py-5 border-b border-white/5">
           {sidebarOpen && (
-            <h1 className="text-2xl font-extrabold tracking-wide select-none">
-              Admin Dashboard
+            <h1 className="text-lg font-black tracking-tight text-white whitespace-nowrap overflow-hidden uppercase opacity-90">
+              Admin <span className="text-primaryOrange">Workspace</span>
             </h1>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Toggle Sidebar"
-            className="p-2 rounded-md hover:bg-indigo-600 transition"
+            className="p-2 text-zinc-500 hover:text-white hover:bg-white/5 rounded-xl transition-colors shrink-0"
           >
-            <Menu size={24} />
+            <span className="hidden md:block"><Menu size={18} /></span>
+            <span className="md:hidden"><X size={18} /></span>
           </button>
         </div>
 
-        <nav className="flex flex-col mt-8 space-y-2 px-2">
-          <SidebarItem
-            icon={<Home size={20} />}
-            label="Dashboard"
-            active={activeSection === "dashboard"}
-            onClick={() => setActiveSection("dashboard")}
-            open={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<Inbox size={20} />}
-            label="Upload Requests"
-            active={activeSection === "requests"}
-            onClick={() => setActiveSection("requests")}
-            open={sidebarOpen}
-          />
-          <SidebarItem
-            icon={<FileText size={20} />}
-            label="My Uploads"
-            active={activeSection === "uploads"}
-            onClick={() => setActiveSection("uploads")}
-            open={sidebarOpen}
-          />
-        </nav>
+        <div className="flex-1 overflow-y-auto py-5 styled-scrollbar">
+          <div className="px-5 mb-3 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">
+            {sidebarOpen && "Governance"}
+          </div>
+          <nav className="flex flex-col gap-1 px-3 mb-10">
+            <SidebarItem
+              icon={<LayoutDashboard size={16} />}
+              label="Overview"
+              active={activeSection === "dashboard"}
+              onClick={() => setActiveSection("dashboard")}
+              open={sidebarOpen}
+              sectionId="dashboard"
+            />
+            <SidebarItem
+              icon={<Inbox size={16} />}
+              label="Upload Requests"
+              active={activeSection === "requests"}
+              onClick={() => setActiveSection("requests")}
+              open={sidebarOpen}
+              sectionId="requests"
+            />
+            <SidebarItem
+              icon={<FileText size={16} />}
+              label="My Uploads"
+              active={activeSection === "uploads"}
+              onClick={() => setActiveSection("uploads")}
+              open={sidebarOpen}
+              sectionId="uploads"
+            />
+          </nav>
 
-        <div className="mt-auto px-6 py-6 border-t border-indigo-600">
+        </div>
+
+        <div className="mt-auto py-6 px-6 border-t border-white/5 bg-transparent">
           {sidebarOpen && (
-            <p className="text-xs opacity-70 select-none">
-              &copy; 2025 QPaperVault
-            </p>
+            <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity duration-700">
+               <div className="w-1 h-1 rounded-full bg-indigo-500 animate-pulse" />
+               <span className="text-[9px] text-zinc-400 font-black uppercase tracking-[0.3em]">
+                 QPAPERVAULT © 2026
+               </span>
+            </div>
           )}
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        <header className="flex items-center justify-between bg-gradient-to-r from-indigo-800 via-purple-700 to-pink-700 px-6 py-3 shadow-md select-none">
-          <h2 className="text-white text-lg font-semibold tracking-wide">
-            {activeSection === "dashboard"
-              ? "Dashboard"
-              : activeSection === "uploads"
-                ? "My Uploads"
-                : activeSection === "requests"
-                  ? "Upload Requests"
-                  : activeSection === "profile"
-                    ? "Profile"
-                    : ""}
-          </h2>
+      <div className="flex-1 flex flex-col min-w-0 bg-[#0a0b10]">
+        {/* Main Area */}
+        <main className={`flex-1 ${activeSection === "dashboard" || activeSection === "profile" ? "p-5 lg:p-8" : "p-0"} overflow-hidden relative flex flex-col`}>
+          {/* Subtle background glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-80 bg-primaryOrange/[0.03] blur-[150px] rounded-full pointer-events-none -z-10"></div>
 
-          {/* User Dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              aria-haspopup="true"
-              aria-expanded={dropdownOpen}
-              aria-label="User menu"
-              className="flex items-center space-x-3 rounded-full bg-gradient-to-tr from-purple-700 to-pink-700 px-3 py-1 shadow-sm hover:shadow-md transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500"
-            >
-              <div className="relative rounded-full bg-white p-[2px]">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    user?.fullName || "Admin"
-                  )}&background=4f46e5&color=fff&size=128`}
-                  alt="User Avatar"
-                  className="w-9 h-9 rounded-full object-cover"
-                />
-              </div>
-              <div className="flex flex-col leading-tight text-white max-w-[140px] truncate">
-                <span className="font-semibold text-white truncate">
-                  {user?.fullName}
-                </span>
-                <span className="text-xs opacity-80 truncate">
-                  {user?.email}
-                </span>
-              </div>
-              <svg
-                className={`w-5 h-5 text-white transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""
-                  }`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
+          <div className={`${activeSection === "dashboard" || activeSection === "profile" ? "max-w-6xl w-full" : "max-w-full w-full"} mx-auto h-full flex flex-col`}>
+            {activeSection === "dashboard" && (
+              <section className="animate-fade-in relative h-full flex flex-col">
+                {/* Background DNA - Governance Grid & Glow */}
+                <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+                    {/* Cobalt Radial Glow */}
+                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/[0.04] blur-[150px] rounded-full animate-pulse-slow"></div>
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/[0.04] blur-[150px] rounded-full animate-pulse-slow delay-1000"></div>
+                </div>
 
-            {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-52 rounded-xl bg-white border border-purple-300 shadow-md origin-top-right z-50">
+                {/* Compact Header */}
+                <div className="mb-10 relative z-10">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Archive Governance v2.4.1</span>
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-black mb-3 text-white tracking-tighter uppercase">
+                    Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Director</span>
+                  </h1>
+                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.25em] max-w-xl leading-relaxed">
+                    Oversee system integrity, moderate contributions, and manage the knowledge vault's evolution with peak operational efficiency.
+                  </p>
+                </div>
+
+                {/* Operations Stats Strip */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 relative z-10">
+                  {[
+                    { label: "Pending Tasks", value: "24", color: "indigo", icon: Inbox },
+                    { label: "Total Members", value: "840+", color: "blue", icon: User },
+                    { label: "Vault Density", value: "4.2 GB", color: "emerald", icon: LayoutDashboard },
+                    { label: "System Uptime", value: "99.9%", color: "orange", icon: Activity },
+                  ].map((stat, i) => (
+                    <div key={i} className="bg-white/[0.03] border border-white/5 p-5 rounded-2xl backdrop-blur-md group hover:bg-white/[0.05] transition-all relative overflow-hidden">
+                      <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-${stat.color}-500 group-hover:h-full transition-all duration-500`} />
+                      <div className="flex items-center gap-3 mb-2">
+                        <stat.icon size={11} className={`text-${stat.color}-400/70`} strokeWidth={3} />
+                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">{stat.label}</p>
+                      </div>
+                      <p className="text-xl font-black text-white tracking-tight group-hover:scale-105 transition-transform origin-left">{stat.value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Governance Module Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 h-full max-h-[400px]">
+                   <div 
+                      onClick={() => setActiveSection("requests")}
+                      className="bg-white/[0.03] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl hover:border-indigo-500/30 hover:bg-white/[0.05] transition-all duration-500 cursor-pointer group relative overflow-hidden flex flex-col justify-end"
+                    >
+                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                         <Inbox size={100} strokeWidth={0.5} />
+                      </div>
+                      <div className="relative">
+                        <div className="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shrink-0 border border-indigo-500/20 mb-6">
+                           <Inbox size={20} />
+                        </div>
+                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">Queue Moderation</h3>
+                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Audit and process student upload requests with authoritative precision.</p>
+                      </div>
+                      <div className="mt-8 flex items-center gap-2 text-[9px] font-black text-indigo-500 uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity">
+                        Enter Governance <ChevronRight size={10} />
+                      </div>
+                   </div>
+                   
+                   <div 
+                      onClick={() => setActiveSection("uploads")}
+                      className="bg-white/[0.03] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl hover:border-blue-500/30 hover:bg-white/[0.05] transition-all duration-500 cursor-pointer group relative overflow-hidden flex flex-col justify-end"
+                    >
+                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                         <FileText size={100} strokeWidth={0.5} />
+                      </div>
+                      <div className="relative">
+                        <div className="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shrink-0 border border-blue-500/20 mb-6">
+                           <FileText size={20} />
+                        </div>
+                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-blue-400 transition-colors uppercase tracking-tight">Internal Repository</h3>
+                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Manage institutional question paper assets and scholarly configurations.</p>
+                      </div>
+                      <div className="mt-8 flex items-center gap-2 text-[9px] font-black text-blue-500 uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity">
+                        Enter Archive <ChevronRight size={10} />
+                      </div>
+                   </div>
+                </div>
+
+                {/* Governance Status Watermark */}
+                <div className="mt-auto pt-10 flex items-center justify-center pointer-events-none opacity-10">
+                   <div className="flex items-center gap-6">
+                      <div className="h-[1px] w-20 bg-gradient-to-r from-transparent to-white/50"></div>
+                      <span className="text-[9px] font-black uppercase tracking-[0.8em] text-white whitespace-nowrap">Unified Governance Interface v2.4.1</span>
+                      <div className="h-[1px] w-20 bg-gradient-to-l from-transparent to-white/50"></div>
+                   </div>
+                </div>
+              </section>
+            )}
+
+            {activeSection === "requests" && (
+              <section className="animate-fade-in relative h-full flex flex-col bg-cardBg/20 border-l border-white/5">
+                <UploadRequestsTable />
+              </section>
+            )}
+
+            {activeSection === "uploads" && (
+              <section className="animate-fade-in relative h-full flex flex-col bg-cardBg/20 border-l border-white/5">
+                <MyUploadsTable />
+
+
                 <button
-                  className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-t-xl"
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    setActiveSection("profile");
-                  }}
+                  onClick={() => setModalOpen(true)}
+                  className="fixed bottom-8 right-8 bg-gradient-to-br from-primaryOrange to-[#ff7b5f] text-white font-black px-5 py-3 rounded-xl border border-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(254,82,56,0.4)] flex items-center gap-2.5 transition-all duration-500 hover:scale-110 hover:-translate-y-2 hover:shadow-primaryOrange/50 group z-40"
+                  aria-label="Upload Previous Year Question Paper"
                 >
-                  <User size={18} className="mr-3 text-purple-600" /> Profile
+                  <UploadCloud size={16} className="stroke-[3] group-hover:animate-bounce" />
+                  <span className="uppercase tracking-widest text-[9px]">Upload Paper</span>
                 </button>
-                <button
-                  className="flex items-center w-full px-5 py-3 text-purple-700 hover:bg-purple-100 transition font-semibold rounded-b-xl"
-                  onClick={handleLogout}
-                >
-                  <LogOut size={18} className="mr-3 text-purple-600" /> Logout
-                </button>
+              </section>
+            )}
+
+            {activeSection === "profile" && (
+              <div className="animate-fade-in">
+                <UserProfile user={user} />
               </div>
             )}
           </div>
-        </header>
-
-        {/* Content Area */}
-        <main className="flex-1 overflow-auto p-8 bg-gray-50">
-          {activeSection === "dashboard" && (
-            <section className="w-full py-6">
-              <h1 className="text-2xl font-bold mb-4 text-gray-800">
-                Welcome to the Dashboard
-              </h1>
-              <p className="text-gray-600">
-                Use the sidebar to navigate between Upload Requests and your
-                Uploads.
-              </p>
-            </section>
-          )}
-          {activeSection === "requests" && (
-            <section className="w-full py-6">
-              <div className="max-w-full overflow-x-auto">
-                <UploadRequestsTable />
-              </div>
-            </section>
-          )}
-          {activeSection === "uploads" && (
-            <section className="w-full py-6 relative">
-              <div className="max-w-full overflow-x-auto">
-                <MyUploadsTable />
-              </div>
-              <button
-                onClick={() => setModalOpen(true)}
-                className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold px-5 py-3 rounded-full shadow-lg flex items-center space-x-2 text-base transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400"
-                aria-label="Upload Previous Year Question Paper"
-                title="Upload Previous Year Question Paper"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12v-8m0 0l-3 3m3-3l3 3"
-                  />
-                </svg>
-                <span>Upload</span>
-              </button>
-            </section>
-          )}
-          {activeSection === "profile" && <UserProfile user={user} />}
         </main>
       </div>
 
@@ -231,29 +288,6 @@ export default function AdminDashboard() {
         <UploadPaperForm onClose={() => setModalOpen(false)} />
       </Modal>
 
-      <style>
-        {`
-          .transition-width {
-            transition-property: width;
-          }
-        `}
-      </style>
     </div>
-  );
-}
-
-function SidebarItem({ icon, label, active, onClick, open }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-4 py-3 px-5 rounded-lg transition-colors w-full text-left ${active
-          ? "bg-indigo-600 shadow-md text-white font-semibold"
-          : "hover:bg-indigo-600 hover:text-white text-indigo-300"
-        }`}
-      aria-current={active ? "page" : undefined}
-    >
-      {icon}
-      {open && <span className="truncate">{label}</span>}
-    </button>
   );
 }

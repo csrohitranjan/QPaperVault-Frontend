@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getUser, isLoggedIn, logoutUser } from "../utils/auth";
+import { FiArrowRight } from "react-icons/fi";
+import { User } from "lucide-react";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +36,7 @@ export default function Navbar() {
       case "admin":
         return "/admin-dashboard";
       default:
-        return "/";
+        return "/student-dashboard";
     }
   };
 
@@ -93,9 +95,18 @@ export default function Navbar() {
     navigate("/");
   };
 
-  const dashboard = () => {
+  const dashboard = (section = "dashboard", extraState = {}) => {
     setUserMenuOpen(false);
-    navigate(getDashboardPath());
+    setMenuOpen(false);
+    const path = getDashboardPath();
+    // Force navigation even if already on the same path
+    if (location.pathname === path) {
+      navigate(path, { state: { section, ...extraState }, replace: true });
+      // Dispatch event so dashboard can react to section change
+      window.dispatchEvent(new CustomEvent("dashboardNavigate", { detail: { section } }));
+    } else {
+      navigate(path, { state: { section, ...extraState } });
+    }
   };
 
   // Safe user name
@@ -105,103 +116,133 @@ export default function Navbar() {
   const userInitial = displayName.charAt(0).toUpperCase();
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-gray-950 via-[#1f1f47] to-gray-950 shadow-md border-b border-white/5">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-themeBg border-b border-white/5 transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo */}
         <button
           onClick={() => closeMenuAndNavigate("/")}
-          className="flex items-center gap-2 focus:outline-none"
+          className="flex items-center gap-2 focus:outline-none group"
         >
-          <span className="text-2xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent tracking-tight">
-            QPaperVault
-          </span>
+          <div className="w-10 h-10 rounded-xl bg-primaryOrange flex items-center justify-center shadow-[0_8px_30px_rgba(254,82,56,0.3)] transition-all group-hover:scale-105 group-active:scale-95">
+             <span className="text-white font-black text-xl leading-none">Q</span>
+          </div>
+          <div className="flex flex-col items-start leading-none gap-0.5">
+            <span className="text-lg font-black text-white tracking-tighter">
+              PaperVault
+            </span>
+            <span className="text-[9px] font-bold text-primaryOrange uppercase tracking-[0.2em] opacity-80">
+              Exam Excellence
+            </span>
+          </div>
         </button>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-10">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm font-medium transition-all ${isActive(link.path)
+              className={`relative text-sm tracking-widest font-bold uppercase transition-all duration-200 py-2 ${isActive(link.path)
                 ? "text-white"
-                : "text-gray-300 hover:text-white"
+                : "text-textMuted hover:text-white"
                 }`}
             >
               {link.label}
+              {isActive(link.path) && (
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primaryOrange shadow-[0_0_10px_rgba(254,82,56,0.8)]" />
+              )}
             </Link>
           ))}
         </div>
 
         {/* Desktop Right */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-6">
           {!authenticated ? (
             <>
               <Link
                 to="/login"
-                className="text-sm font-medium text-gray-200 hover:text-white transition"
+                className="text-sm font-semibold text-textMuted hover:text-white transition-colors"
               >
-                Login
+                Sign in
               </Link>
 
               <Link
                 to="/signup"
-                className="text-sm font-semibold text-white px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 shadow-md hover:shadow-lg transition"
+                className="text-sm font-bold text-white px-6 py-2.5 rounded-xl bg-primaryOrange hover:bg-orange-600 shadow-[0_4px_14px_0_rgba(254,82,56,0.2)] hover:shadow-[0_6px_20px_rgba(254,82,56,0.3)] hover:-translate-y-0.5 transition-all"
               >
-                Signup
+                Get Started
               </Link>
             </>
           ) : (
-            <div className="relative" ref={userMenuRef}>
+             <div className="relative" ref={userMenuRef}>
               <button
                 aria-haspopup="menu"
                 aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen((prev) => !prev)}
-                className="flex items-center gap-2 text-sm font-medium text-gray-100 hover:text-white focus:outline-none"
+                className="flex items-center gap-2.5 px-2 py-1.5 rounded-2xl hover:bg-white/5 transition-all focus:outline-none group"
               >
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-semibold">
+                {/* Clean Avatar Circle */}
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primaryOrange to-orange-500 flex items-center justify-center text-[13px] font-black text-white shadow-sm ring-1 ring-white/10 group-hover:ring-primaryOrange/40 transition-all">
                   {userInitial}
                 </div>
 
-                <span className="max-w-[160px] truncate">{displayName}</span>
+                <div className="hidden lg:flex flex-col items-start leading-none">
+                  <span className="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">
+                    {displayName.split(' ')[0]}
+                  </span>
+                </div>
 
                 <svg
-                  className={`w-4 h-4 text-gray-300 transition-transform ${userMenuOpen ? "rotate-180" : ""
+                  className={`w-3.5 h-3.5 text-textMuted group-hover:text-white transition-all duration-300 ${userMenuOpen ? "rotate-180" : ""
                     }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
               {userMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-2 w-44 rounded-lg bg-gray-950/95 border border-white/10 shadow-2xl py-1.5 backdrop-blur-xl"
+                  className="absolute right-0 mt-2 w-56 rounded-[1.5rem] bg-[#111218] border border-white/5 shadow-[0_30px_60px_rgba(0,0,0,0.7)] overflow-hidden origin-top-right animate-in fade-in zoom-in-95 duration-200 z-[60] backdrop-blur-3xl"
                 >
-                  <button
-                    role="menuitem"
-                    onClick={dashboard}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-100 hover:bg-white/10 transition"
-                  >
-                    Dashboard
-                  </button>
+                  <div className="px-5 py-4 border-b border-white/5 bg-white/[0.02]">
+                    <p className="text-xs font-bold text-white mb-0.5">{displayName}</p>
+                    <p className="text-[10px] text-textMuted font-medium truncate opacity-60">{user?.email}</p>
+                  </div>
 
-                  <button
-                    role="menuitem"
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-red-500/15 transition"
-                  >
-                    Logout
-                  </button>
+                  <div className="p-1.5">
+                    <button
+                      role="menuitem"
+                      onClick={() => dashboard()}
+                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-primaryOrange rounded-xl transition-all flex items-center gap-2.5 group"
+                    >
+                      Dashboard
+                    </button>
+
+                    <button
+                      role="menuitem"
+                      onClick={() => dashboard("profile")}
+                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-white/[0.03] rounded-xl transition-all flex items-center gap-2.5 group mt-0.5"
+                    >
+                      <User size={16} className="opacity-60 group-hover:opacity-100" />
+                      Profile
+                    </button>
+
+                    <button
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-red-400 hover:text-white hover:bg-red-500 rounded-xl transition-all flex items-center gap-2.5 group mt-0.5"
+                    >
+                      <svg className="w-4 h-4 opacity-60 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Sign out
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -211,7 +252,7 @@ export default function Navbar() {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMenuOpen((p) => !p)}
-          className="md:hidden text-white focus:outline-none"
+          className="md:hidden text-textMuted hover:text-white focus:outline-none"
           aria-label="Toggle Menu"
         >
           <svg
@@ -242,19 +283,19 @@ export default function Navbar() {
       {menuOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity"
             onClick={() => setMenuOpen(false)}
           />
 
-          <div className="fixed top-0 right-0 w-72 h-full bg-gradient-to-b from-[#1f1f47] to-gray-950 z-50 shadow-2xl p-6 flex flex-col space-y-4 text-white rounded-l-2xl">
+          <div className="fixed top-0 right-0 w-[min(20rem,calc(100vw-2rem))] h-full bg-themeBg z-50 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-white/5 p-8 flex flex-col h-full text-white animate-slide-in-right">
 
             {/* User Section */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-10">
               <div className="flex flex-col">
-                <span className="text-sm text-white/60">
-                  {authenticated ? "Logged in as" : "Welcome to"}
+                <span className="text-[10px] font-black text-primaryOrange uppercase tracking-[0.25em] mb-1">
+                  {authenticated ? "Member Access" : "Hello there!"}
                 </span>
-                <span className="text-lg font-semibold">
+                <span className="text-xl font-black text-white truncate">
                   {authenticated ? displayName : "QPaperVault"}
                 </span>
               </div>
@@ -262,11 +303,11 @@ export default function Navbar() {
               <button
                 onClick={() => setMenuOpen(false)}
                 aria-label="Close Menu"
-                className="text-white/70 hover:text-white"
+                className="w-12 h-12 rounded-2xl bg-cardBg hover:bg-primaryOrange flex items-center justify-center text-textMuted hover:text-white transition-all border border-white/5 shadow-lg group"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor">
+                <svg className="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
-                    strokeWidth="2"
+                    strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M6 18L18 6M6 6l12 12"
@@ -276,14 +317,14 @@ export default function Navbar() {
             </div>
 
             {/* Nav Links */}
-            <div className="space-y-1">
+            <div className="space-y-3 mt-4">
               {navLinks.map((link) => (
                 <button
                   key={link.path}
                   onClick={() => closeMenuAndNavigate(link.path)}
-                  className={`w-full text-left text-[15px] font-medium px-3 py-2 rounded-md transition ${isActive(link.path)
-                    ? "bg-white/10 text-white"
-                    : "text-white/90 hover:bg-white/5"
+                  className={`w-full text-left text-sm font-black uppercase tracking-widest px-6 py-4 rounded-2xl transition-all ${isActive(link.path)
+                    ? "bg-primaryOrange text-white shadow-[0_8px_30px_rgba(254,82,56,0.2)]"
+                    : "text-textMuted hover:bg-white/5 hover:text-white"
                     }`}
                 >
                   {link.label}
@@ -291,41 +332,48 @@ export default function Navbar() {
               ))}
             </div>
 
-            <hr className="border-white/10 my-3" />
+            <hr className="border-white/5 my-8" />
 
             {/* Mobile Auth Buttons */}
             {!authenticated ? (
-              <>
+              <div className="space-y-4 mt-auto mb-4">
                 <button
                   onClick={() => closeMenuAndNavigate("/login")}
-                  className="w-full text-center border border-white/30 text-white rounded-full py-2 bg-white/5 hover:bg-white/10 font-medium"
+                  className="w-full text-center border border-white/10 text-white rounded-xl py-3.5 bg-cardBg hover:bg-white/5 font-semibold transition-colors"
                 >
-                  Login
+                  Sign in
                 </button>
 
                 <button
                   onClick={() => closeMenuAndNavigate("/signup")}
-                  className="w-full text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-full py-2 font-semibold shadow-lg hover:shadow-xl"
+                  className="w-full text-center bg-primaryOrange text-white rounded-xl py-3.5 font-bold shadow-[0_4px_14px_0_rgba(254,82,56,0.2)] hover:shadow-[0_6px_20px_rgba(254,82,56,0.3)] transition-all"
                 >
-                  Signup
+                  Get Started
                 </button>
-              </>
+              </div>
             ) : (
-              <>
+              <div className="space-y-4 mt-auto mb-4">
                 <button
-                  onClick={dashboard}
-                  className="w-full text-center bg-white/10 hover:bg-white/20 rounded-full py-2 font-medium"
+                  onClick={() => dashboard()}
+                  className="w-full text-center bg-cardBg text-white hover:bg-white/5 rounded-xl py-3.5 font-semibold transition-colors border border-white/5"
                 >
                   Dashboard
                 </button>
 
                 <button
-                  onClick={handleLogout}
-                  className="w-full text-center border border-red-400/60 text-red-200 rounded-full py-2 bg-red-500/10 hover:bg-red-500/20 font-medium"
+                  onClick={() => { dashboard("profile"); setMenuOpen(false); }}
+                  className="w-full text-center bg-cardBg text-white hover:bg-white/5 rounded-xl py-3.5 font-semibold transition-colors border border-white/5"
                 >
-                  Logout
+                  Profile
                 </button>
-              </>
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-center border border-red-500/20 text-red-500 rounded-xl py-3.5 bg-red-500/10 hover:bg-red-500/20 font-semibold transition-colors"
+                >
+                  Sign out
+                </button>
+              </div>
             )}
           </div>
         </>
