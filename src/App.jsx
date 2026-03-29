@@ -12,7 +12,6 @@ import ResetPassword from "./pages/ResetPassword";
 import ConfirmRegistration from "./pages/ConfirmRegistration";
 
 import Contact from "./pages/Contact";
-import Notes from "./pages/Notes";
 
 // Lazy-loaded Heavy Routes
 const StudentDashboard = React.lazy(() => import("./pages/StudentDashboard"));
@@ -51,7 +50,6 @@ function App() {
 
             {/* Public pages */}
             <Route path="/contact" element={<Contact />} />
-            <Route path="/notes" element={<Notes />} />
 
             {/* PROTECTED: PYQs (requires login) */}
             <Route

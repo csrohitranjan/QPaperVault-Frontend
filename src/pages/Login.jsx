@@ -1,10 +1,16 @@
 // src/pages/Login.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { setAuthData } from "../utils/auth";
+import { getUser, isLoggedIn, setAuthData } from "../utils/auth";
 import { loginUser } from "../api/authService";
 import { toast } from "react-toastify";
 import { FiLock, FiMail, FiArrowRight } from "react-icons/fi";
+
+const getDashboardPath = (user) => {
+  if (user?.role === "admin") return "/admin-dashboard";
+  if (user?.role === "educator") return "/educator-dashboard";
+  return "/student-dashboard";
+};
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +22,14 @@ export default function Login() {
 
   const fromProtected = location.state?.from?.pathname;
 
+  useEffect(() => {
+    if (!isLoggedIn()) return;
+
+    const existingUser = getUser();
+    const target = fromProtected || getDashboardPath(existingUser);
+    navigate(target, { replace: true });
+  }, [navigate, fromProtected]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -26,11 +40,8 @@ export default function Login() {
         const { accessToken, user } = res.data;
         setAuthData(accessToken, user);
         if (fromProtected) return navigate(fromProtected, { replace: true });
-        
-        // Redirect based on role instead of going back in history or to home
-        if (user?.role === "admin") return navigate("/admin-dashboard");
-        if (user?.role === "educator") return navigate("/educator-dashboard");
-        return navigate("/student-dashboard");
+
+        return navigate(getDashboardPath(user));
       }
     } catch (err) {
       const message = err?.response?.data?.message || err?.message || "Login failed.";
@@ -41,24 +52,24 @@ export default function Login() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white text-center">
+    <div className="ui-page-shell text-center">
       {/* Subtle Ambient Glows */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      <div className="ui-page-glow-orange"></div>
       
-      <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+      <div className="w-full max-w-[420px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
         <form
           onSubmit={handleLogin}
-          className="bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10 relative"
+          className="ui-card relative"
         >
           {/* Header */}
           <div className="mb-8">
             <div className="w-14 h-14 bg-primaryOrange/10 border border-primaryOrange/20 rounded-2xl mx-auto mb-5 flex items-center justify-center shadow-sm">
               <FiLock className="text-primaryOrange text-2xl" />
             </div>
-            <h2 className="text-2xl font-black text-white tracking-tight mb-1">
+            <h2 className="ui-title mb-1">
               Welcome <span className="text-primaryOrange">Back</span>
             </h2>
-            <p className="text-textMuted text-[10px] font-bold tracking-widest uppercase opacity-60">
+            <p className="ui-subtitle">
               Personalized Knowledge Vault
             </p>
           </div>
@@ -66,12 +77,12 @@ export default function Login() {
           <div className="space-y-5 text-left">
             {/* Email field */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold text-textMuted uppercase tracking-widest ml-1">Email</label>
+              <label className="ui-label">Email</label>
               <div className="relative group">
                 <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primaryOrange/60 transition-colors" />
                 <input
                   type="email"
-                  className="w-full bg-themeBg border border-white/5 rounded-xl pl-11 pr-4 py-3 text-white placeholder-white/10 focus:outline-none focus:border-primaryOrange/30 focus:bg-[#1a1c26] transition-all font-medium text-sm"
+                  className="ui-input-dark pl-11"
                   placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -83,14 +94,14 @@ export default function Login() {
             {/* Password field */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between ml-1">
-                <label className="text-[10px] font-bold text-textMuted uppercase tracking-widest">Password</label>
+                <label className="ui-label ml-0">Password</label>
                 <Link to="/forgot-password" size="10" className="text-[9px] font-black uppercase text-primaryOrange hover:underline tracking-widest">Forgot?</Link>
               </div>
               <div className="relative group">
                 <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-primaryOrange/60 transition-colors" />
                 <input
                   type="password"
-                  className="w-full bg-themeBg border border-white/5 rounded-xl pl-11 pr-4 py-3 text-white placeholder-white/10 focus:outline-none focus:border-primaryOrange/30 focus:bg-[#1a1c26] transition-all font-medium text-sm tracking-[0.2em]"
+                  className="ui-input-dark pl-11 tracking-[0.2em]"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -103,7 +114,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 mt-8 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50"
+            className="ui-btn-primary w-full mt-8"
           >
             {isLoading ? "Authenticating..." : "Sign In"}
             {!isLoading && <FiArrowRight className="text-base" />}

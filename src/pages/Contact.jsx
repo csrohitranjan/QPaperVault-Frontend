@@ -20,12 +20,12 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] relative font-sans flex items-center justify-center px-4 overflow-x-hidden bg-themeBg text-white py-12 lg:py-0">
+    <div className="min-h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 overflow-x-hidden bg-themeBg text-white py-10 sm:py-12 lg:py-0">
       {/* Glow Effects */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
       <div className="absolute bottom-0 left-10 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
 
-      <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center relative z-10">
+      <div className="max-w-7xl w-full grid md:grid-cols-2 gap-8 lg:gap-10 items-center relative z-10">
         {/* Left Section - Profile (Zoomed) */}
         <div className="text-center lg:text-left space-y-4 px-4 animate-in fade-in slide-in-from-left-8 duration-700">
           <div className="relative inline-block">
@@ -38,10 +38,10 @@ export default function Contact() {
           </div>
           
           <div>
-            <h2 className="text-3xl font-extrabold text-white mb-2">
+            <h2 className="text-3xl font-black text-white mb-2 tracking-tight">
               Rohit <span className="text-primaryOrange">Ranjan</span>
             </h2>
-            <p className="text-base text-textMuted font-medium leading-relaxed max-w-sm mx-auto lg:mx-0">
+            <p className="text-sm sm:text-base text-textMuted font-medium leading-relaxed max-w-sm mx-auto lg:mx-0">
               Have feedback, finding bugs, or want to collaborate? Reach out—I'd love to hear from you.
             </p>
 
@@ -69,10 +69,10 @@ export default function Contact() {
         </div>
 
         {/* Right Section - Contact Form */}
-        <div className="bg-cardBg rounded-3xl shadow-2xl p-6 sm:p-8 border border-white/5 relative overflow-hidden animate-in fade-in slide-in-from-right-8 duration-700">
+        <div className="ui-card relative overflow-hidden animate-in fade-in slide-in-from-right-8 duration-700">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primaryOrange/10 rounded-full blur-3xl pointer-events-none"></div>
           
-          <h2 className="text-2xl font-extrabold mb-6 text-white relative z-10">
+          <h2 className="ui-title mb-6 relative z-10">
             Drop a Message
           </h2>
           
@@ -86,7 +86,7 @@ export default function Contact() {
                 value={formData.fullName}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-themeBg text-white placeholder-textMuted border border-white/5 focus:border-primaryOrange/50 focus:bg-themeBg transition-all outline-none font-medium text-sm"
+                className="ui-input-dark pl-11"
               />
             </div>
 
@@ -99,7 +99,7 @@ export default function Contact() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-themeBg text-white placeholder-textMuted border border-white/5 focus:border-primaryOrange/50 focus:bg-themeBg transition-all outline-none font-medium text-sm"
+                className="ui-input-dark pl-11"
               />
             </div>
 
@@ -112,13 +112,13 @@ export default function Contact() {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-themeBg text-white placeholder-textMuted border border-white/5 focus:border-primaryOrange/50 focus:bg-themeBg transition-all outline-none resize-none font-medium text-sm"
+                className="ui-input-dark pl-11 py-3.5 resize-none"
               ></textarea>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-primaryOrange text-white font-black rounded-xl shadow-[0_4px_14px_0_rgba(254,82,56,0.3)] hover:shadow-[0_6px_20px_rgba(254,82,56,0.5)] transition-all hover:-translate-y-0.5 active:scale-95 mt-1 text-sm uppercase tracking-widest"
+              className="ui-btn-primary w-full mt-1"
             >
               Send Message
             </button>

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,6 +7,49 @@
 @layer base {
   body {
     @apply bg-themeBg text-white antialiased selection:bg-primaryOrange/30 selection:text-white overflow-x-hidden;
+    font-family: "Outfit", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+@layer components {
+  .ui-page-shell {
+    @apply relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 overflow-hidden bg-themeBg text-white;
+  }
+
+  .ui-page-glow-orange {
+    @apply absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10;
+  }
+
+  .ui-card {
+    @apply bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10;
+  }
+
+  .ui-title {
+    @apply text-2xl font-black text-white tracking-tight;
+  }
+
+  .ui-subtitle {
+    @apply text-textMuted text-[10px] font-bold uppercase tracking-widest opacity-60;
+  }
+
+  .ui-label {
+    @apply text-[10px] font-bold uppercase tracking-widest ml-1 text-textMuted;
+  }
+
+  .ui-input-dark {
+    @apply w-full rounded-xl px-4 py-3 border transition-all outline-none font-medium text-sm bg-themeBg text-white placeholder-white/10 border-white/5 focus:border-primaryOrange/30 focus:bg-[#1a1c26];
+  }
+
+  .ui-input-light {
+    @apply w-full rounded-xl px-4 py-3 border transition-all outline-none font-medium text-sm border-gray-200 text-gray-900 focus:border-primaryOrange bg-white;
+  }
+
+  .ui-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50;
+  }
+
+  .ui-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 py-3.5 bg-cardBg text-white rounded-xl font-semibold border border-white/10 hover:bg-white/5 transition-colors;
   }
 }
 

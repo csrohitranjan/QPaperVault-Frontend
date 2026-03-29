@@ -12,8 +12,8 @@ export default function InputField({
     <div className="flex flex-col gap-1.5 group">
       <label
         htmlFor={name}
-        className={`text-[10px] font-bold uppercase tracking-widest ml-1 transition-colors ${
-          dark ? "text-textMuted group-focus-within:text-primaryOrange" : "text-gray-700"
+        className={`ui-label transition-colors ${
+          dark ? "group-focus-within:text-primaryOrange" : "text-gray-700"
         }`}
       >
         {label}
@@ -26,10 +26,10 @@ export default function InputField({
         onChange={onChange}
         placeholder={placeholder}
         required
-        className={`w-full rounded-xl px-4 py-3 border transition-all outline-none font-medium text-sm ${
+        className={`${
           dark
-            ? "bg-themeBg text-white placeholder-white/10 border-white/5 focus:border-primaryOrange/30 focus:bg-[#1a1c26]"
-            : "border-gray-200 text-gray-900 focus:border-primaryOrange bg-white"
+            ? "ui-input-dark"
+            : "ui-input-light"
         }`}
       />
     </div>

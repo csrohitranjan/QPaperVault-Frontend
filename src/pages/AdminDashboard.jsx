@@ -172,23 +172,23 @@ export default function AdminDashboard() {
                 <div className="mb-10 relative z-10">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Archive Governance v2.4.1</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">QPaperVault Admin Governance Hub</span>
                   </div>
                   <h1 className="text-3xl md:text-4xl font-black mb-3 text-white tracking-tighter uppercase">
-                    Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Director</span>
+                    Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Moderation Control Center</span>
                   </h1>
                   <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.25em] max-w-xl leading-relaxed">
-                    Oversee system integrity, moderate contributions, and manage the knowledge vault's evolution with peak operational efficiency.
+                    Review upload requests, maintain repository quality, and track archive activity across programmes and departments.
                   </p>
                 </div>
 
                 {/* Operations Stats Strip */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 relative z-10">
                   {[
-                    { label: "Pending Tasks", value: "24", color: "indigo", icon: Inbox },
-                    { label: "Total Members", value: "840+", color: "blue", icon: User },
-                    { label: "Vault Density", value: "4.2 GB", color: "emerald", icon: LayoutDashboard },
-                    { label: "System Uptime", value: "99.9%", color: "orange", icon: Activity },
+                    { label: "Pending Reviews", value: "24", color: "indigo", icon: Inbox },
+                    { label: "Approved This Week", value: "118", color: "blue", icon: User },
+                    { label: "Repository Papers", value: "1,240+", color: "emerald", icon: LayoutDashboard },
+                    { label: "Escalated Cases", value: "03", color: "orange", icon: Activity },
                   ].map((stat, i) => (
                     <div key={i} className="bg-white/[0.03] border border-white/5 p-5 rounded-2xl backdrop-blur-md group hover:bg-white/[0.05] transition-all relative overflow-hidden">
                       <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-${stat.color}-500 group-hover:h-full transition-all duration-500`} />
@@ -214,11 +214,11 @@ export default function AdminDashboard() {
                         <div className="w-12 h-12 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shrink-0 border border-indigo-500/20 mb-6">
                            <Inbox size={20} />
                         </div>
-                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">Queue Moderation</h3>
-                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Audit and process student upload requests with authoritative precision.</p>
+                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">Upload Request Queue</h3>
+                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Approve or reject pending paper submissions with remarks and moderation controls.</p>
                       </div>
                       <div className="mt-8 flex items-center gap-2 text-[9px] font-black text-indigo-500 uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity">
-                        Enter Governance <ChevronRight size={10} />
+                        Review Queue <ChevronRight size={10} />
                       </div>
                    </div>
                    
@@ -233,11 +233,11 @@ export default function AdminDashboard() {
                         <div className="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shrink-0 border border-blue-500/20 mb-6">
                            <FileText size={20} />
                         </div>
-                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-blue-400 transition-colors uppercase tracking-tight">Internal Repository</h3>
-                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Manage institutional question paper assets and scholarly configurations.</p>
+                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-blue-400 transition-colors uppercase tracking-tight">Repository Oversight</h3>
+                        <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest leading-relaxed">Track approved uploads, verify metadata quality, and review repository visibility.</p>
                       </div>
                       <div className="mt-8 flex items-center gap-2 text-[9px] font-black text-blue-500 uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity">
-                        Enter Archive <ChevronRight size={10} />
+                        Open My Uploads <ChevronRight size={10} />
                       </div>
                    </div>
                 </div>
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setModalOpen(true)}
-                  className="fixed bottom-8 right-8 bg-gradient-to-br from-primaryOrange to-[#ff7b5f] text-white font-black px-5 py-3 rounded-xl border border-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(254,82,56,0.4)] flex items-center gap-2.5 transition-all duration-500 hover:scale-110 hover:-translate-y-2 hover:shadow-primaryOrange/50 group z-40"
+                  className="absolute bottom-5 right-5 sm:bottom-6 sm:right-6 bg-gradient-to-br from-primaryOrange to-[#ff7b5f] text-white font-black px-5 py-3 rounded-xl border border-white/10 backdrop-blur-md shadow-[0_10px_40px_rgba(254,82,56,0.4)] flex items-center gap-2.5 transition-all duration-500 hover:scale-110 hover:-translate-y-2 hover:shadow-primaryOrange/50 group z-30"
                   aria-label="Upload Previous Year Question Paper"
                 >
                   <UploadCloud size={16} className="stroke-[3] group-hover:animate-bounce" />
@@ -276,7 +276,7 @@ export default function AdminDashboard() {
             )}
 
             {activeSection === "profile" && (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in h-full overflow-y-auto styled-scrollbar pb-6 pr-1 md:pr-0">
                 <UserProfile user={user} />
               </div>
             )}

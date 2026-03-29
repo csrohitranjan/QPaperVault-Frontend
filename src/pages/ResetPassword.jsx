@@ -1,10 +1,10 @@
 // src/pages/ResetPassword.jsx
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate, Link } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { resetUserPassword } from "../api/authService";
 import InputField from "../components/InputField";
-import { FiLock, FiCheck, FiArrowRight } from "react-icons/fi";
+import { FiLock, FiArrowRight } from "react-icons/fi";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -54,24 +54,24 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white text-center">
+    <div className="ui-page-shell text-center">
       {/* Subtle Glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      <div className="ui-page-glow-orange"></div>
       
-      <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+      <div className="w-full max-w-[420px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
         <form
           onSubmit={handleSubmit}
-          className="bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10 relative"
+          className="ui-card relative"
         >
           {/* Header */}
           <div className="mb-8">
             <div className="w-14 h-14 bg-primaryOrange/10 border border-primaryOrange/20 rounded-2xl mx-auto mb-5 flex items-center justify-center shadow-sm">
               <FiLock className="text-primaryOrange text-2xl" />
             </div>
-            <h2 className="text-2xl font-black text-white tracking-tight mb-1">
+            <h2 className="ui-title mb-1">
               New Password
             </h2>
-            <p className="text-textMuted text-[10px] font-bold tracking-widest uppercase opacity-60">
+            <p className="ui-subtitle">
               Create a secure new password
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function ResetPassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 mt-8 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50"
+            className="ui-btn-primary w-full mt-8"
           >
             {loading ? "Resetting..." : "Reset Password"}
             {!loading && <FiArrowRight className="text-base" />}

@@ -8,7 +8,7 @@ import React, {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getUser, isLoggedIn, logoutUser } from "../utils/auth";
 import { FiArrowRight } from "react-icons/fi";
-import { User } from "lucide-react";
+import { LayoutDashboard, LogOut, User } from "lucide-react";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,7 +23,6 @@ export default function Navbar() {
   const navLinks = [
     { label: "Home", path: "/" },
     { label: "PYQs", path: "/pyqs" },
-    { label: "Notes", path: "/notes" },
     { label: "Contact", path: "/contact" },
   ];
 
@@ -81,6 +80,20 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", close);
   }, [userMenuOpen]);
 
+  // Close user dropdown on Escape
+  useEffect(() => {
+    if (!userMenuOpen) return;
+
+    const onEscape = (e) => {
+      if (e.key === "Escape") {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onEscape);
+    return () => document.removeEventListener("keydown", onEscape);
+  }, [userMenuOpen]);
+
   const isActive = (path) => location.pathname === path;
 
   const closeMenuAndNavigate = (path) => {
@@ -117,7 +130,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-themeBg border-b border-white/5 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
         {/* Logo */}
         <button
@@ -138,7 +151,7 @@ export default function Navbar() {
         </button>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center space-x-10">
+        <div className="hidden md:flex items-center space-x-8 lg:space-x-10">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -180,7 +193,11 @@ export default function Navbar() {
                 aria-haspopup="menu"
                 aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen((prev) => !prev)}
-                className="flex items-center gap-2.5 px-2 py-1.5 rounded-2xl hover:bg-white/5 transition-all focus:outline-none group"
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-2xl border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primaryOrange/60 group ${
+                  userMenuOpen
+                    ? "bg-white/[0.06] border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.35)]"
+                    : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-white/10"
+                }`}
               >
                 {/* Clean Avatar Circle */}
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primaryOrange to-orange-500 flex items-center justify-center text-[13px] font-black text-white shadow-sm ring-1 ring-white/10 group-hover:ring-primaryOrange/40 transition-all">
@@ -188,7 +205,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden lg:flex flex-col items-start leading-none">
-                  <span className="text-sm font-semibold text-white/90 group-hover:text-white transition-colors">
+                  <span className="text-sm font-semibold text-white/90 group-hover:text-white transition-colors max-w-[8rem] truncate">
                     {displayName.split(' ')[0]}
                   </span>
                 </div>
@@ -207,39 +224,41 @@ export default function Navbar() {
               {userMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-2 w-56 rounded-[1.5rem] bg-[#111218] border border-white/5 shadow-[0_30px_60px_rgba(0,0,0,0.7)] overflow-hidden origin-top-right animate-in fade-in zoom-in-95 duration-200 z-[60] backdrop-blur-3xl"
+                  className="absolute right-0 top-full mt-3 w-64 rounded-[1.65rem] bg-[#111218]/95 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.7)] overflow-hidden origin-top-right animate-in fade-in zoom-in-95 duration-200 z-[60] backdrop-blur-3xl"
                 >
-                  <div className="px-5 py-4 border-b border-white/5 bg-white/[0.02]">
-                    <p className="text-xs font-bold text-white mb-0.5">{displayName}</p>
-                    <p className="text-[10px] text-textMuted font-medium truncate opacity-60">{user?.email}</p>
+                  <div className="px-5 py-4 border-b border-white/10 bg-white/[0.03]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500 mb-1">Signed In As</p>
+                    <p className="text-sm font-bold text-white mb-0.5 truncate">{displayName}</p>
+                    <p className="text-[11px] text-textMuted font-medium truncate opacity-70">{user?.email}</p>
                   </div>
 
-                  <div className="p-1.5">
+                  <div className="px-3 pt-3 pb-3">
+                    <p className="px-2 pb-2 text-[10px] font-black uppercase tracking-[0.16em] text-zinc-500">Quick Actions</p>
+
                     <button
                       role="menuitem"
                       onClick={() => dashboard()}
-                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-primaryOrange rounded-xl transition-all flex items-center gap-2.5 group"
+                      className="w-full text-left px-3.5 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-primaryOrange/90 rounded-xl transition-all flex items-center gap-2.5 group border border-transparent hover:border-primaryOrange/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryOrange/70"
                     >
-                      Dashboard
+                      <LayoutDashboard size={15} className="opacity-70 group-hover:opacity-100" />
+                      Open Dashboard
                     </button>
 
                     <button
                       role="menuitem"
                       onClick={() => dashboard("profile")}
-                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-white/[0.03] rounded-xl transition-all flex items-center gap-2.5 group mt-0.5"
+                      className="w-full text-left px-3.5 py-2.5 text-xs font-bold text-textMuted hover:text-white hover:bg-white/[0.05] rounded-xl transition-all flex items-center gap-2.5 group mt-1 border border-transparent hover:border-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                     >
-                      <User size={16} className="opacity-60 group-hover:opacity-100" />
+                      <User size={15} className="opacity-70 group-hover:opacity-100" />
                       Profile
                     </button>
 
                     <button
                       role="menuitem"
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2.5 text-xs font-bold text-red-400 hover:text-white hover:bg-red-500 rounded-xl transition-all flex items-center gap-2.5 group mt-0.5"
+                      className="w-full text-left px-3.5 py-2.5 text-xs font-bold text-red-400 hover:text-white hover:bg-red-500/80 rounded-xl transition-all flex items-center gap-2.5 group mt-1 border border-transparent hover:border-red-400/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60"
                     >
-                      <svg className="w-4 h-4 opacity-60 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
+                      <LogOut size={15} className="opacity-70 group-hover:opacity-100" />
                       Sign out
                     </button>
                   </div>
@@ -287,7 +306,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
           />
 
-          <div className="fixed top-0 right-0 w-[min(20rem,calc(100vw-2rem))] h-full bg-themeBg z-50 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-white/5 p-8 flex flex-col h-full text-white animate-slide-in-right">
+          <div className="fixed top-0 right-0 w-[min(20rem,calc(100vw-1rem))] h-full bg-themeBg z-50 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-white/5 p-6 sm:p-8 flex flex-col h-full text-white animate-slide-in-right">
 
             {/* User Section */}
             <div className="flex items-center justify-between mb-10">

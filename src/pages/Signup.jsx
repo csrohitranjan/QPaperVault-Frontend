@@ -1,9 +1,16 @@
 // src/pages/Signup.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../components/InputField";
 import { requestRegistration } from "../api/authService";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getUser, isLoggedIn } from "../utils/auth";
 import { FiUserPlus, FiArrowRight, FiShield } from "react-icons/fi";
+
+const getDashboardPath = (user) => {
+  if (user?.role === "admin") return "/admin-dashboard";
+  if (user?.role === "educator") return "/educator-dashboard";
+  return "/student-dashboard";
+};
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -15,6 +22,18 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromProtected = location.state?.from?.pathname;
+
+  useEffect(() => {
+    if (!isLoggedIn()) return;
+
+    const existingUser = getUser();
+    const target = fromProtected || getDashboardPath(existingUser);
+    navigate(target, { replace: true });
+  }, [navigate, fromProtected]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -44,9 +63,9 @@ export default function Signup() {
 
   if (isSuccess) {
     return (
-      <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white">
+      <div className="ui-page-shell">
         <div className="absolute inset-0 bg-emerald-500/5 blur-[120px] pointer-events-none -z-10"></div>
-        <div className="max-w-md w-full bg-cardBg border border-white/5 rounded-[2rem] p-10 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-700">
+        <div className="max-w-md w-full ui-card text-center animate-in fade-in zoom-in-95 duration-700">
           <div className="mx-auto mb-6 w-16 h-16 flex items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 shadow-sm">
             <FiShield size={32} className="text-emerald-500" />
           </div>
@@ -68,14 +87,14 @@ export default function Signup() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] relative flex items-center justify-center px-4 font-sans overflow-hidden bg-themeBg text-white text-center">
+    <div className="ui-page-shell text-center">
       {/* Subtle Glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primaryOrange/5 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+      <div className="ui-page-glow-orange"></div>
       
       <div className="w-full max-w-[420px] lg:max-w-2xl relative z-10 animate-in fade-in zoom-in-95 duration-700">
         <form
           onSubmit={handleSignup}
-          className="bg-cardBg border border-white/5 shadow-2xl rounded-[2rem] p-8 sm:p-10"
+          className="ui-card"
         >
           {/* Header */}
           <div className="mb-8 lg:flex lg:items-center lg:text-left lg:gap-6">
@@ -86,7 +105,7 @@ export default function Signup() {
               <h2 className="text-2xl font-black text-white tracking-tight mb-0.5">
                 Join <span className="text-primaryOrange">Vault</span>
               </h2>
-              <p className="text-textMuted text-[10px] font-bold tracking-widest uppercase opacity-60">
+              <p className="ui-subtitle">
                 Create your student account
               </p>
             </div>
@@ -139,7 +158,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full lg:w-3/5 flex items-center justify-center gap-2 py-3.5 bg-primaryOrange text-white rounded-xl font-black shadow-[0_4px_15px_rgba(254,82,56,0.2)] hover:shadow-[0_8px_25px_rgba(254,82,56,0.4)] hover:-translate-y-0.5 transition-all active:scale-95 text-sm uppercase tracking-widest disabled:opacity-50"
+              className="ui-btn-primary w-full lg:w-3/5"
             >
               {isLoading ? "Processing..." : "Create Account"}
               {!isLoading && <FiArrowRight className="text-base" />}
