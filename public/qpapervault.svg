@@ -1,18 +1,22 @@
-<!-- Save this as qpapervault.svg in your public folder -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="qpv-gradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6366F1"/> <!-- Indigo-500 -->
-      <stop offset="100%" stop-color="#EC4899"/> <!-- Pink-500 -->
+    <linearGradient id="qpv-bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF8A5B"/>
+      <stop offset="0.55" stop-color="#FE5238"/>
+      <stop offset="1" stop-color="#DE3B28"/>
     </linearGradient>
+    <radialGradient id="qpv-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20 14) rotate(30) scale(28)">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Outer Vault Circle -->
-  <circle cx="32" cy="32" r="30" fill="url(#qpv-gradient)" />
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#qpv-bg)"/>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#qpv-glow)"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="15.5" stroke="#FFFFFF" stroke-opacity="0.18"/>
 
-  <!-- Stylized Q Letter -->
-  <path
-    d="M32 18c-7.7 0-14 6.3-14 14s6.3 14 14 14c2.5 0 4.8-.6 6.9-1.7l5.8 5.8c.6.6 1.5.6 2.1 0s.6-1.5 0-2.1l-5.8-5.8c1.1-2.1 1.7-4.4 1.7-6.9 0-7.7-6.3-14-14-14zm0 4c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z"
-    fill="#fff"
-  />
+  <circle cx="30.5" cy="30.5" r="11.5" stroke="#FFFFFF" stroke-width="5"/>
+  <path d="M39 39L46 46" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+
+  <path d="M43 16H49V22" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
